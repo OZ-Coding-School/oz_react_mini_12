@@ -1,0 +1,28 @@
+.movie-card {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+}
+
+/* 마우스를 올렸을 때 반응성 효과 부여 */
+.movie-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.movie-poster {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.movie-title {
+  margin: 8px 0;
+}
+
+.movie-rating {
+  margin: 0;
+}

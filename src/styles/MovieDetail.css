@@ -1,0 +1,51 @@
+.detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 40px;
+  /*텍스트 폰트 설정*/
+  font-family: Arial, sans-serif; 
+  justify-content: center;
+}
+
+.detail-poster {
+  width: 300px;
+  border-radius: 12px;
+  /*그림자 설정*/
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+}
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+   /*세로 방향 상하단 정렬 및 균형 배치*/
+  justify-content: space-between;
+  max-width: 500px;
+  flex: 1;
+}
+
+.detail-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rating {
+  font-size: 18px;
+  font-weight: bold;
+  color: #eab308;
+}
+
+.genres {
+  margin: 20px 0;
+  font-weight: 500;
+}
+
+.overview-section {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  font-size: 15px;
+  /*줄 간격 조절*/
+  line-height: 1.6;
+}
