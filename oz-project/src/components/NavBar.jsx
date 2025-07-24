@@ -10,12 +10,12 @@ function NavBar() {
   };
 
   return (
-    <nav className="bg-black text-white px-6 py-4 flex items-center">
+    <nav className="bg-black text-white px-6 py-10 flex items-center">
       {/* 로고 */}
       <div className="flex-shrink-0">
         <Link to="/">
           <h1
-            className="text-4xl font-bold cursor-pointer select-none
+            className="text-7xl font-bold cursor-pointer select-none
                         bg-gradient-to-r from-red-500 via-yellow-400 to-pink-500
                         bg-clip-text text-transparent"
           >
@@ -36,17 +36,17 @@ function NavBar() {
             value={search}
             onChange={handleSearchChange}
             placeholder="영화명을 입력하세요."
-            className="w-full pl-12 pr-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full pl-12 pr-4 py-2 text-2xl rounded-md bg-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
       </div>
 
       {/* 우측 버튼 그룹 */}
       <div className="flex-shrink-0 flex gap-4">
-        <button className="px-4 py-1 rounded-md bg-red-600 hover:bg-red-700 transition-colors">
+        <button className="px-6 py-3 text-lg rounded-md bg-red-600 hover:bg-red-700 transition-colors cursor-pointer">
           회원가입
         </button>
-        <button className="px-4 py-1 rounded-md border border-red-600 hover:bg-red-600 hover:text-white transition-colors">
+        <button className="px-6 py-3 text-lg rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer">
           로그인
         </button>
       </div>
