@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import SignupModal from "./SignupModal";
 
 function NavBar() {
-  const [search, setSearch] = useState('');
+    const [search, setSearch] = useState('');
+    const [isSignupOpen, setIsSignupOpen] = useState(false);
 
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
-  };
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+    };
 
   return (
     <nav className="bg-black text-white px-6 py-10 flex items-center">
@@ -43,14 +45,20 @@ function NavBar() {
 
       {/* 우측 버튼 그룹 */}
       <div className="flex-shrink-0 flex gap-4">
-        <button className="px-6 py-3 text-lg rounded-md bg-red-600 hover:bg-red-700 transition-colors cursor-pointer">
-          회원가입
+        <button
+            onClick={() => setIsSignupOpen(true)}
+            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg text-white font-semibold cursor-pointer"
+        >
+            회원가입
         </button>
+
         <button className="px-6 py-3 text-lg rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer">
           로그인
         </button>
       </div>
+            {isSignupOpen && <SignupModal onClose={() => setIsSignupOpen(false)} />}
     </nav>
+    
   );
 }
 
