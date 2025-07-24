@@ -1,18 +1,36 @@
 import React, { useState } from "react";
+import { supabase } from "../../supabaseClient";
 
 export default function SignupModal({ onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (password !== confirm) {
       alert("비밀번호가 일치하지 않습니다!");
       return;
     }
-    alert("가입이 완료되었습니다.");
-    onClose(); // 닫기
+
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      alert(`회원가입 실패되었습니다. 실패 사유 : ${error.message}`);
+    } else {
+      alert("회원가입이 완료되었습니다.");
+      onClose();
+    }
   };
 
   return (
@@ -65,10 +83,12 @@ export default function SignupModal({ onClose }) {
           <button
             type="submit"
             className="w-full bg-red-600 hover:bg-red-700 transition p-3 rounded-lg font-semibold"
+            disabled={loading}
           >
-            가입하기
+            {loading ? "가입 중..." : "가입하기"}
           </button>
         </form>
+
 
         <p className="text-sm text-center text-gray-400">
           이미 계정이 있으신가요?{" "}
