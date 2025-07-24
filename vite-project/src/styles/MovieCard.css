@@ -1,0 +1,29 @@
+.card {
+    margin: 10px;
+    height: 350px;
+    width: 250px;
+    border-radius: 12px;
+}
+
+.poster > img {
+    height: 250px;
+    width: 250px;
+    border-radius: 12px;
+}
+
+.title > h3 {
+    height: 50px;
+    font-weight: bold;
+}
+
+.rated {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rated > h5 {
+    font-size: 1rem;
+    color: #ff9900;
+    background-color: #fff3cd;
+    padding: 6px 12px;
+}
