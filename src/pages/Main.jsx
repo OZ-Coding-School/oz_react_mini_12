@@ -20,7 +20,8 @@ export default function Main() {
         navigation
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        className="swiper"
+              className="swiper"
+              
       >
         {movieList.results.map((movie) => (
           <SwiperSlide key={movie.id} className="SwiperSlide">
