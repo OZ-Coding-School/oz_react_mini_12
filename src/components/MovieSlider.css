@@ -1,0 +1,21 @@
+/* 슬라이더 컨테이너 전체에 대한 스타일 */
+.movie-slider-container {
+  padding: 20px 0; /* 위아래 여백 */
+}
+
+/* Swiper 슬라이드 자체에 대한 스타일 조정 */
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+/* 네비게이션 버튼(이전/다음 화살표) 색상 변경 */
+.swiper-button-prev,
+.swiper-button-next {
+  color: #8b5cf6; /* 보라색 */
+}
+
+/* 페이지네이션(점) 활성 상태 색상 변경 */
+.swiper-pagination-bullet-active {
+  background: #8b5cf6; /* 보라색 */
+}
