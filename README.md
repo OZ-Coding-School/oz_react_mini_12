@@ -1,12 +1,15 @@
-# React + Vite
+## [mission-1] 1단계 미션 구현 - 이원희/3팀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 구현 사항
+- MovieDetai.jsx로 세부 페이지 구현
+- Layout.jsx로 전체 레이아웃 구성
+- NavBar.jsx로 상단 바 구성
+- main.jsx로 여러 레이아웃 및 라우터 활성화 및 렌더링
+- MovieCard.jsx로 내용 만들기
+- styles 폴더로 모든 css 분리(정리 및 가시성 향샹)
 
-Currently, two official plugins are available:
+## 어려웠던 점
+- silder 도전과제 시 그림자 표현같은게 출력되지 않는 점을 수정하느라 검색에 시간을 소모했음
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 구현 이미지
+![alt text](image.png)
