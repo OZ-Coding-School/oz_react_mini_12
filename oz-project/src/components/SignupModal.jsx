@@ -26,7 +26,7 @@ export default function SignupModal({ onClose }) {
         >
           ✕
         </button>
-        <h2 className="text-3xl font-bold text-center">회원가입</h2>
+        <h2 className="text-3xl font-bold text-center">OZFlix 회원가입</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
