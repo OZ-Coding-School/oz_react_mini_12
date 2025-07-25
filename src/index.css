@@ -1,5 +1,18 @@
+:root {
+  --color-bg: #555;
+  --color-text: black;
+  --color-white: white;
+  --color-accent: #e42051;
+}
+
 body {
   margin: 0;
   height: 100vh;
   display: flex;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+a {
+  text-decoration: none;
 }

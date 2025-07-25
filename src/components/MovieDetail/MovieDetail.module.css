@@ -1,6 +1,7 @@
 .container {
   display: flex;
   gap: 20px;
+  margin: 30px 20px;
 }
 
 .poster {
@@ -25,20 +26,22 @@
 .title {
   font-weight: bold;
   font-size: 1.5em;
+  color: var(--color-white);
 }
 
 .rating {
   font-weight: bold;
   font-size: 1.2em;
+  color: var(--color-white);
 }
 
 .genres {
   font-size: 1em;
-  color: #555;
+  color: var(--color-white);
 }
 
 .overview {
   font-size: 1em;
   line-height: 1.4;
-  color: #333;
+  color: var(--color-white);
 }
