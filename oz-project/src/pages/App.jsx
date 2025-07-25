@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import movieListData from '../../data/movieListData.json';
 import MovieCard from '../components/MovieCard';
 import RecommendationSlider from '../components/RecommendationSlider';
 
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1`;
+
 export default function App() {
   const [movies, setMovies] = useState([]);
+  const blockedKeywords = ['성교육', 'ママ', 'ママ', '성인'];       // 키워드 필터 (adult 등록안됬는데 성인물인거 필터링)
+  
 
   useEffect(() => {
-    setMovies(movieListData.results || []);
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = (data.results || []).filter(
+          (movie) =>
+            !movie.adult &&
+            !blockedKeywords.some((keyword) => movie.title.includes(keyword))
+        )
+        setMovies(filtered);
+      })
+      .catch((err) => console.error('영화 가져오기 실패:', err));
   }, []);
+
 
   return (
     <div className="p-4">

@@ -6,8 +6,8 @@ import { Navigation } from "swiper/modules";
 export default function RecommendationSlider({ movies }) {
   return (
     <Swiper
-      slidesPerView={5}
-      spaceBetween={10}
+      slidesPerView={4}
+      spaceBetween={30}
       navigation={true}
       modules={[Navigation]}
       className="mySwiper"
