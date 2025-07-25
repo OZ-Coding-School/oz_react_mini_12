@@ -1,7 +1,9 @@
+import { memo } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Layout() {
+const Layout = memo(() => {
+  console.log("Layout 컴포넌트 렌더링");
   // debounce로 검색 구현
 
   const onChangeSearch = (e) => {
@@ -12,6 +14,7 @@ export default function Layout() {
     <LayoutStyled>
       <nav>
         <Link to={"/"} className="home">
+          {console.log("Link 렌더링")}
           oz_movie
         </Link>
         <div className="top_bar">
@@ -28,7 +31,9 @@ export default function Layout() {
       <Outlet />
     </LayoutStyled>
   );
-}
+});
+export default Layout;
+
 
 const LayoutStyled = styled.div`
   nav {
@@ -81,7 +86,6 @@ const LayoutStyled = styled.div`
           padding-left: 1.7rem;
           font-weight: 500;
           color: white;
-
         }
         span {
           position: absolute;
