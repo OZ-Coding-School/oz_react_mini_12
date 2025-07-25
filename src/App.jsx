@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick"; //설치한 슬라이더 라이브러리의 컴포넌트
-import movieList from "./data/movieListData.json";
 import MovieCard from "./components/MovieCard";
 import "./styles/App.css"; //css 경로 지정
 
@@ -9,17 +8,38 @@ import "./styles/App.css"; //css 경로 지정
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-//슬라이더 객체 설정
 function App() {
-  const [movies] = useState(movieList.results);
+  const [movies, setMovies] = useState([]);
 
+  //추가: 영화 API 요청 및 성인 영화 필터링
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const apiKey = import.meta.env.VITE_TMDB_API_KEY; //환경변수에서 키 받아오기
+      const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=1`;
+
+      try {
+        const response = await fetch(url); //api 요청
+        const data = await response.json(); //json 응답 처리
+
+        //성인 영화(adult: true) 제외
+        const filtered = data.results.filter((movie) => movie.adult === false);
+        setMovies(filtered);
+      } catch (error) {
+        console.error("Error fetching movie data:", error);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  //슬라이더 객체 설정
   const settings = {
     dots: true, //하단에 점
     infinite: true, //무한 루프
     speed: 500, //전환 속도
     slidesToShow: 4, //기본 표시 갯수
     slidesToScroll: 1, //한번에 넘어가는 슬라이드 갯수
-    
+
     /*반응형 화면 너비 설정*/
     responsive: [
       {
@@ -44,7 +64,8 @@ function App() {
       <Slider {...settings} className="movie-slider">
         {movies.map((movie) => (
           <div key={movie.id} className="movie-slide">
-            <Link to="/details" className="movie-link">
+            {/* 각 영화 카드를 클릭하면 해당 영화의 상세 페이지로 이동 */}
+            <Link to={`/details/${movie.id}`} className="movie-link">
               <MovieCard
                 title={movie.title}
                 poster_path={movie.poster_path}

@@ -7,17 +7,17 @@ import MovieDetail from "./pages/MovieDetail"; //세부 페이지
 import Layout from "./components/Layout"; //전체 레이아웃
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    /*라우팅 기능을 활성화*/
-    <BrowserRouter>
-      {/*경로별 컴포넌트를 매핑*/}
-      <Routes> 
-        {/*"/" 경로에 Layout 컴포넌트를 렌더링*/}
-        <Route path="/" element={<Layout />}>
-          {/*"/" 경로에 해당하며, Layout 안에서 App 컴포넌트를 렌더링*/}
-          <Route index element={<App />} />
-          {/* "/details" 경로로 접속하면 Layout 내부에 MovieDetail 컴포넌트를 렌더링*/}
-          <Route path="details" element={<MovieDetail />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+  /*라우팅 기능을 활성화*/
+  <BrowserRouter>
+    {/*경로별 컴포넌트를 매핑*/}
+    <Routes> 
+      {/*"/" 경로에 Layout 컴포넌트를 렌더링*/}
+      <Route path="/" element={<Layout />}>
+        {/*"/" 경로에 해당하며, Layout 안에서 App 컴포넌트를 렌더링*/}
+        <Route index element={<App />} />
+        {/* "/details/:id" 경로로 접속하면 Layout 내부에 MovieDetail 컴포넌트를 렌더링 */}
+        <Route path="details/:id" element={<MovieDetail />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
 );
