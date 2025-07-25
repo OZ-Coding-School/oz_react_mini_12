@@ -5,21 +5,44 @@ import RecommendationSlider from '../components/RecommendationSlider';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [recommended, setRecommended] = useState([]);
+  const [movies, setMovies] = useState([]);       // 추천 영화
+  const [recommended, setRecommended] = useState([]);   // 개봉예정영화
+
   /*
   영상을 불러오는도중, adult 등록은 안되었는데 보기 민망할 정도의
-  영상이 있어서, 추가로 필터링할 단어들을 등록하였습니다.
+  영상이 있어서, 추가로 필터링할 단어들을 등록하였습니다. 단어조차 적는것도 별로라서
+  별도의 파일에 넣어놓고 임포트해서 사용하였습니다.
   */
-  const blockedKeywords = ['성교육', 'ママ', '성인'];
 
+  const bannedKeywords = (import.meta.env.VITE_BANNED_KEYWORDS || "")
+    .split(",")
+    .map(word => word.trim().toLowerCase())
+    .filter(Boolean);
+
+  const bannedPairs = (import.meta.env.VITE_BANNED_KEYWORD_PAIRS || "")
+    .split(",")
+    .map(pair => pair.trim().toLowerCase().split("|"))
+    .filter(pair => pair.length === 2);
+
+  const containsBannedPair = (text) => {
+    return bannedPairs.some(([a, b]) => text.includes(a) && text.includes(b));
+  };
+
+  /*
+  필터링
+  기본기능 -> 속성이 adult인 영화만
+  추가기능 -> 블록키워드와 함께 합산하여 필터링
+  */
   const filterMovies = (movies) =>
-    (movies || []).filter(
-      (movie) => 
-        !movie.adult &&
-        !blockedKeywords.some((keyword) => movie.title.includes(keyword))
-    );
+  (movies || []).filter((movie) => {
+    const title = movie.title.toLowerCase();
+    const hasBannedKeyword = bannedKeywords.some(keyword => title.includes(keyword));
+    const hasBannedPair = bannedPairs.some(([a, b]) => title.includes(a) && title.includes(b));
+      return !movie.adult && !hasBannedKeyword && !hasBannedPair;
+  });
+
     // 추천 영화
+    // useEffect로 fetch불러오기.
     useEffect(() => {
     async function fetchPopularMovies() {
       try {
