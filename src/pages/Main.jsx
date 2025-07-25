@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
+import "../swiper.css";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ export default function Main() {
         navigation
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-              className="swiper"
-              
+        className="swiper"
+        centeredSlides={true}
+        slidesPerView={3}
+        spaceBetween={40}
       >
         {movieList.results.map((movie) => (
           <SwiperSlide key={movie.id} className="SwiperSlide">
@@ -48,22 +51,27 @@ const MainStyled = styled.div`
 
   .swiper {
     height: 40rem;
-    width: 50%;
+    width: 110rem;
     margin: auto;
+    padding: 0 3.5rem;
 
     .SwiperSlide {
+      padding-bottom:2rem;
+      margin-top: 2rem;
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         cursor: pointer;
         height: 100%;
+        padding-bottom:1.4rem;
       }
     }
   }
   .general_movies {
     display: grid;
-    width: 120rem;
+    width: 100%;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
     margin: 0;
