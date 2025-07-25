@@ -1,0 +1,32 @@
+/* src/components/NavBar.css */
+.navbar {
+  background-color: #111;
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.search-bar {
+  width: 40%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+}
+
+.buttons .btn {
+  margin-left: 10px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
