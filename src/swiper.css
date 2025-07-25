@@ -1,0 +1,21 @@
+.swiper-wrapper {
+  display: flex;
+}
+
+:root {
+  --swiper-navigation-size: 7rem;
+  --swiper-theme-color: #aaaaaabb;
+}
+
+.swiper-horizontal > .swiper-scrollbar,
+.swiper-scrollbar.swiper-scrollbar-horizontal {
+  transform: translate(-50%, -50%);
+  left: 50%;
+  width: 50%;
+  height: 0.7rem;
+  background-color: #96969659;
+  bottom: 0rem;
+}
+.swiper-pagination-fraction, .swiper-pagination-custom, .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal{
+  bottom: 1.2rem;
+}
