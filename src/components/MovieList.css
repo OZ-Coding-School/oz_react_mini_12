@@ -1,0 +1,63 @@
+/* MovieList 전체 컨테이너 */
+.movie-list-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* 카드들을 3개씩 나열 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+/* 개별 카드 스타일 */
+.movie-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.movie-info {
+  padding: 16px;
+}
+
+.movie-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.movie-date,
+.movie-rating {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.movie-overview {
+  font-size: 0.95rem;
+  margin-top: 10px;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* 링크 스타일 제거 */
+.movie-card-link {
+  text-decoration: none;
+  color: inherit;
+}
