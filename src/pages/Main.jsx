@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import movieList from "../mission1_data/data/movieListData.json";
 import { MovieCard } from "../components/movieCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar } from "swiper/modules";
@@ -9,9 +8,23 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
 import "../swiper.css";
+import { useMovieStore } from "../store/movies";
 
 export default function Main() {
+  const { movies,slideMovies,  loading } = useMovieStore();
   const navigate = useNavigate();
+
+
+
+  // console.log("movies:", movies);
+  // console.log("slideMovies:", slideMovies);
+
+
+  
+  
+
+  if (loading) return <h1>로딩 중...</h1>;
+
   return (
     <MainStyled>
       <Swiper
@@ -26,7 +39,7 @@ export default function Main() {
         slidesPerView={3}
         spaceBetween={40}
       >
-        {movieList.results.map((movie) => (
+        {slideMovies.map((movie) => (
           <SwiperSlide key={movie.id} className="SwiperSlide">
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -37,7 +50,7 @@ export default function Main() {
         ))}
       </Swiper>
       <div className="general_movies">
-        {movieList.results.map((movie) => (
+        {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie}></MovieCard>
         ))}
       </div>
@@ -56,7 +69,7 @@ const MainStyled = styled.div`
     padding: 0 3.5rem;
 
     .SwiperSlide {
-      padding-bottom:2rem;
+      padding-bottom: 2rem;
       margin-top: 2rem;
       display: flex;
       justify-content: center;
@@ -65,7 +78,7 @@ const MainStyled = styled.div`
       img {
         cursor: pointer;
         height: 100%;
-        padding-bottom:1.4rem;
+        padding-bottom: 1.4rem;
       }
     }
   }

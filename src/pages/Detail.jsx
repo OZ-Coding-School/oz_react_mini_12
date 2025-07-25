@@ -1,17 +1,49 @@
 import { useParams } from "react-router-dom";
-import movieList from "../mission1_data/data/movieListData.json";
 import styled from "styled-components";
+import { useMovieStore } from "../store/movies";
+import { useEffect, useState } from "react";
+import {  fetchGenres, fetchMovieById } from "../api/tmbi";
 
 export default function Detail() {
+  const { getMovieById, genreMap } = useMovieStore();
   const { movieId } = useParams();
-  console.log(movieId);
-  const movie = movieList.results.find((el) => el.id === Number(movieId));
+  const [movie, setMovie] = useState(null);
+  // console.log(movieId);
+  
+  useEffect(() => {
+    const loadMovie = async () => {
+      let movieData = getMovieById(Number(movieId));
+      // console.log("movieData:", movieData);
+      // console.log("genres:", movieData?.genres);
+
+      fetchGenres();
+
+      if (!movieData) {
+        try {
+          movieData = await fetchMovieById(movieId);
+          // console.log("movie:", movieData);
+          setMovie(movieData);
+        } catch (e) {
+          console.error("error:", e);
+        }
+      } else {
+        setMovie(movieData); 
+      }
+    };
+    loadMovie();
+
+  }, [movieId]);
 
   if (!movie) {
-    return <div style={{ color: "white" }}>존재하지 않는 영화입니다.</div>;
+    return (
+      <div style={{ color: "white", margin: "auto" }}>
+        loading...
+      </div>
+    );
   }
 
-  const { title, vote_average, poster_path, genre_ids, overview } = movie;
+  const { title, vote_average, poster_path, genre_ids, overview, release_date } =
+    movie;
 
   return (
     <DetailStyled>
@@ -23,8 +55,8 @@ export default function Detail() {
 
       <div className="info">
         <div className="title">{title}</div>
-        <div className="vote_average">평점 : ⭐{vote_average}</div>
-        {/* <div className="genre">{genre_ids}</div> */}
+        <div className="vote_average">평점 : ⭐{vote_average.toFixed(2)}</div>
+        <div className="genre">{genre_ids?.map((el) => genreMap[el]).join(", ")}</div>
         <div className="overview">{overview}</div>
       </div>
     </DetailStyled>
@@ -47,21 +79,21 @@ const DetailStyled = styled.div`
 
   .info {
     margin-left: 4rem;
-    margin-top:2rem;
+    margin-top: 2rem;
     min-width: 40rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
     flex: 1;
     height: 100%;
-    margin-right:4rem;
+    margin-right: 4rem;
 
     .title {
       font-size: 4rem;
       font-weight: 800;
     }
     .vote_average {
-        font-size : 1.2rem;
+      font-size: 1.2rem;
     }
 
     .genre {

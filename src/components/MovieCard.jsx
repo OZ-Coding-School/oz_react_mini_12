@@ -5,6 +5,8 @@ export function MovieCard({ movie }) {
     const { title, vote_average, poster_path, id } = movie;
     const navigate = useNavigate();
 
+    const formattedRate = vote_average.toFixed(2);
+  
   return (
     <Card onClick={() => navigate(`/detail/${id}`)}>
       <img
@@ -12,7 +14,7 @@ export function MovieCard({ movie }) {
         alt={title + " poster"}
       />
       <div className="title">{title}</div>
-      <div className="vote_average">평점 : ⭐{vote_average}</div>
+      <div className="vote_average">평점 : ⭐{formattedRate}</div>
     </Card>
   );
 }

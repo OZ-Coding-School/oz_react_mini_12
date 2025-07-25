@@ -1,13 +1,24 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import Layout from "./components/Layout";
+import { useMovieStore } from "./store/movies";
 
 const Main = lazy(() => import("./pages/Main.jsx"));
 const Detail = lazy(() => import("./pages/Detail.jsx"));
 
 
 function App() {
+  const { fetchInitialMovies, fetchInitialGenres } = useMovieStore();
+
+  useEffect(() => {
+    async function init() {
+      await fetchInitialMovies();
+      await fetchInitialGenres();
+    }
+    init();
+  }, []);
+  
   return (
     <>
       <Suspense fallback={<div style={{ fontSize: "6rem" }}>로딩중...</div>}>
