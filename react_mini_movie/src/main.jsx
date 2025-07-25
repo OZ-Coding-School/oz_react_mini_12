@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   // Route, Link, Outlet등 react-router-dom기능을 사용할 수 있게 된다.
   <BrowserRouter>
     <App />
-  </BrowserRouter>,
+  </BrowserRouter>
 )

@@ -1,4 +1,4 @@
-// useState는 react의 상태 관리 훅이다. 얘는 상태 변화 할때도 쓴다.
+// useState는 react의 상태 관리 훅이다. 얘는 상태 변화할 때 쓴다.
 import { useState } from "react"
 // 영화상세 데이터를 담은 JSON형태의 파일을 갖고 왔다.
 import movieDetailData from "../data/movieDetailData.json";
