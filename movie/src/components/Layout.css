@@ -1,0 +1,52 @@
+.filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 24px;
+    background-color: #222;
+    flex-wrap: wrap;
+}
+
+.category-labels {
+    display: flex;
+    gap: 16px;
+    font-size: 16px;
+    color: white;
+}
+
+.category-labels span {
+    cursor: pointer;
+    transition: text-decoration 0.2s;
+}
+
+.category-labels span:hover {
+    text-decoration: underline;
+}
+
+.genre-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='7' viewBox='0 0 10 7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 10px;
+    padding-right: 24px;
+
+    transition: border-bottom 0.2s;
+}
+
+.genre-select:hover {
+    border-bottom: 1px solid white;
+}
