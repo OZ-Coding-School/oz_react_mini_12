@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import movieListData from './data/movieListData.json';
 import MovieCard from './components/MovieCard';
 import MovieDetail from './components/MovieDetail';
 import { Routes, Route } from 'react-router-dom';
@@ -9,20 +8,33 @@ function MovieListPage() {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    setMovies(movieListData.results);
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch('https://api.themoviedb.org/3/movie/popular', {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_READ_TOKEN}`,
+          },
+        });
+
+        const data = await response.json();
+        const filtered = data.results.filter((movie) => movie.adult === false);
+        setMovies(filtered);
+      } catch (error) {
+        console.error('영화 데이터 가져오기 실패:', error);
+      }
+    };
+
+    fetchMovies();
   }, []);
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>🎬 MOVIE LIST</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}> 
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
-            id={movie.id} 
-            title={movie.title}
-            poster_path={movie.poster_path}
-            vote_average={movie.vote_average}
+            movie={movie}
           />
         ))}
       </div>
@@ -35,7 +47,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<MovieListPage />} />
-        <Route path="details/:id" element={<MovieDetail />} /> 
+        <Route path="details/:id" element={<MovieDetail />} />
       </Route>
     </Routes>
   );
