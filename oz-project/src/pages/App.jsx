@@ -7,13 +7,17 @@ const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&l
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const blockedKeywords = ['성교육', 'ママ', 'ママ', '성인'];       // 키워드 필터 (adult 등록안됬는데 성인물인거 필터링)
+  /*
+  영상을 불러오는도중, adult 등록은 안되었는데 보기 민망할 정도의
+  영상이 있어서, 추가로 필터링할 단어들을 등록하였습니다.
+  */
+  const blockedKeywords = ['성교육', 'ママ', 'ママ', '성인'];
   
-
   useEffect(() => {
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
+        // 여기서, TMDB 내 adult로 등록된 컨텐츠와 위에 등록한 키워드를 같이 필터링하였습니다. 
         const filtered = (data.results || []).filter(
           (movie) =>
             !movie.adult &&

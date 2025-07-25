@@ -47,7 +47,7 @@ export default function MovieDetail() {
     }
 
     fetchData();
-    window.scrollTo(0, 0); // 스크롤은 항상 최상단으로
+    window.scrollTo(0, 0); // 스크롤은 항상 최상단으로, 페이지 진입시 아래부분로 가는 오류를 없앴습니다.
   }, [id]);
 
   if (!movie) {
@@ -75,7 +75,7 @@ export default function MovieDetail() {
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-black via-transparent to-black opacity-80" />
 
       {/* 메인 콘텐츠 */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 flex flex-col md:flex-row gap-10 items-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-10 items-center">
         {/* 포스터 */}
         <div className="w-full md:w-1/3 max-w-xs shadow-xl rounded-xl overflow-hidden">
           <img
@@ -105,7 +105,7 @@ export default function MovieDetail() {
           </div>
 
           <p className="text-gray-200 leading-relaxed text-base">
-            {movie.overview || '줄거리 정보가 없습니다.'}
+            {movie.overview || '등록된 시놉시스가 없습니다.'}
           </p>
 
           <div className="flex gap-4">
@@ -120,23 +120,28 @@ export default function MovieDetail() {
       </div>
 
       {/* 예고편 트레일러 */}
-      {trailers.length > 0 && (
-<div className="relative z-10 mx-auto px-6 py-10 max-w-7xl"> 
-  <h2 className="text-2xl font-bold mb-4 text-white">예고편</h2>
-  <div className="w-full h-[450px]"> 
-    <iframe
-      src={`https://www.youtube.com/embed/${trailers[0].key}`}
-      title="Trailer"
-      allowFullScreen
-      className="w-full h-full rounded-lg shadow-lg"
-    />
-  </div>
-</div>
+        {trailers.length > 0 ? (
+          <div className="relative z-10 mx-auto px-4 py-10 max-w-6xl"> 
+          <h2 className="text-2xl font-bold mb-4 text-white">예고편</h2>
+            <div className="w-full h-[450px]"> 
+            <iframe
+              src={`https://www.youtube.com/embed/${trailers[0].key}`}
+              title="Trailer"
+              allowFullScreen
+              className="w-full h-full rounded-lg shadow-lg"
+            />
+            </div>
+          </div>
+      ) : (
+        <div className="relative z-10 mx-auto px-4 py-10 max-w-6xl">
+          <h2 className="text-2xl font-bold mb-4 text-white">예고편</h2>
+          <p className="text-white text-lg">해당 영화는 트레일러 영상이 제공되지 않습니다.</p>
+        </div>
       )}
 
       {/* 감독 */}
       {director && (
-        <div className="relative z-10 max-w-6xl mx-auto px-6 pb-4">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 pb-8">
           <h2 className="text-2xl font-bold mb-2 text-white">감독</h2>
           <p className="text-white text-lg">{director.name}</p>
         </div>
