@@ -122,7 +122,7 @@ export default function MovieDetail() {
       {/* 예고편 트레일러 */}
         {trailers.length > 0 ? (
           <div className="relative z-10 mx-auto px-4 py-10 max-w-6xl"> 
-          <h2 className="text-2xl font-bold mb-4 text-white">예고편</h2>
+          <h2 className="text-2xl font-bold mb-4 text-white">트레일러 예고편</h2>
             <div className="w-full h-[450px]"> 
             <iframe
               src={`https://www.youtube.com/embed/${trailers[0].key}`}
