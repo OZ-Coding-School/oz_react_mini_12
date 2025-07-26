@@ -1,0 +1,13 @@
+/* App.css 또는 MovieList에 들어가는 부분 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.movie-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 또는 space-evenly */
+  gap: 2rem;
+}
