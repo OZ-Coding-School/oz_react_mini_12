@@ -1,61 +1,77 @@
-import React from 'react';
-import movieDetailData from '../../data/movieDetailData.json';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import MovieBackdrop from '../components/MovieBackdrop';
+import MoviePosterSection from '../components/MoviePosterSection';
+import MovieSummarySection from '../components/MovieSummarySection';
+import MovieTrailerSection from '../components/MovieTrailerSection';
+import MovieDirectorSection from '../components/MovieDirectorSection';
+import MovieCastSection from '../components/MovieCastSection';
 
-const baseUrl = 'https://image.tmdb.org/t/p/w500';
+const baseUrl = 'https://image.tmdb.org/t/p/original';
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 export default function MovieDetail() {
-  const movie = movieDetailData;
-  const { id } = useParams();    // 나중에 실제 데이터 fetching할 때 사용 예정입니다
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [cast, setCast] = useState([]);
+  const [director, setDirector] = useState(null);
+  const [trailers, setTrailers] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const movieRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=ko-KR`
+        );
+        const movieData = await movieRes.json();
+        setMovie(movieData);
+
+        const creditsRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}&language=ko-KR`
+        );
+        const creditsData = await creditsRes.json();
+        setCast(creditsData.cast.slice(0, 8));
+        const foundDirector = creditsData.crew.find(
+          (member) => member.job === 'Director'
+        );
+        setDirector(foundDirector);
+
+        const videosRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=ko-KR`
+        );
+        const videosData = await videosRes.json();
+        const trailers = videosData.results.filter(
+          (v) => v.type === 'Trailer' && v.site === 'YouTube'
+        );
+        setTrailers(trailers);
+      } catch (error) {
+        console.error('데이터 불러오기 실패:', error);
+      }
+    }
+    fetchData();
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!movie) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-lg">영화 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="relative min-h-screen bg-black text-white"
-      style={{
-        backgroundImage: `url(${baseUrl}${
-          movie.backdrop_path || movie.poster_path
-        })`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* 배경 어두운 오버레이 */}
-      <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+    <div className="relative min-h-screen text-white">
+      <MovieBackdrop imageUrl={`${baseUrl}${movie.backdrop_path || movie.poster_path}`} />
 
-      {/* 메인 컨텐츠 영역 */}
-      <div className="relative z-10 max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-6">
-        {/* 포스터 */}
-        <div className="flex-shrink-0 w-full md:w-1/3 rounded-lg overflow-hidden shadow-lg">
-          <img
-            src={`${baseUrl}${movie.poster_path}`}
-            alt={movie.title}
-            className="w-full h-auto object-cover"
-          />
-        </div>
-
-        {/* 상세 텍스트 */}
-        <div className="flex-grow">
-          <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
-          <p className="text-yellow-400 text-lg mb-3">
-            ⭐ 평점: {movie.vote_average} ({movie.vote_count}명 참여)
-          </p>
-
-          <div className="mb-4">
-            {/* 영화 장르 목록, Map으로 돌면서, 각각의 장르를 태그로 렌더링 */}
-            {movie.genres.map((g) => (
-              <span
-                key={g.id}
-                className="inline-block bg-red-600 text-white rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2"
-              >
-                {g.name} {/* 영화 장르 name출력 */}
-              </span>
-            ))}
-          </div>
-
-          <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
-        </div>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-10 items-start">
+        <MoviePosterSection movie={movie} baseUrl={baseUrl} />
+        <MovieSummarySection movie={movie} />
       </div>
+
+      <MovieTrailerSection trailers={trailers} />
+      <MovieDirectorSection director={director} />
+      <MovieCastSection cast={cast} baseUrl={baseUrl} />
     </div>
   );
 }
