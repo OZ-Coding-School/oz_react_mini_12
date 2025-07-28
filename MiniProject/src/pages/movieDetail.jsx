@@ -1,18 +1,38 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import movieListData from '../assets/data/movieListData.json';
 
 function MovieDetail() {
   const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=ko-KR`, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_READ_TOKEN}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('영화 데이터를 가져오는 중 오류 발생');
+        }
+        const data = await response.json();
+        setMovie(data);
+      } catch (error) {
+        console.error(error);
+        setMovie(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // id는 문자열이므로 숫자로 변환 후 비교
-  const movie = movieListData.results.find(
-    (movie) => movie.id === parseInt(id, 10)
-  );
+    fetchMovie();
+  }, [id]);
 
-  if (!movie) {
-    return <div>영화를 찾을 수 없습니다.</div>;
-  }
+  if (loading) return <div>로딩 중...</div>;
+  if (!movie) return <div>영화를 찾을 수 없습니다.</div>;
 
   return (
     <div style={{ padding: 20 }}>
@@ -23,7 +43,7 @@ function MovieDetail() {
         style={{ width: '100%', maxWidth: 600, borderRadius: 10 }}
       />
       <p><strong>평점:</strong> {movie.vote_average}</p>
-      <p><strong>장르 ID 목록:</strong> {movie.genre_ids.join(', ')}</p>
+      <p><strong>장르 목록:</strong> {movie.genres.map((g) => g.name).join(', ')}</p>
       <p><strong>줄거리:</strong> {movie.overview}</p>
     </div>
   );

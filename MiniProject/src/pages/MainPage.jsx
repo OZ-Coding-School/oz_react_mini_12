@@ -1,14 +1,35 @@
-import React from 'react';
-import movieList from '../assets/data/movieListData.json';
+import React, {useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
 
 function MainPage() {
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=ko-KR', {
+                    headers: {
+                        accept:'application/json',
+                        Authorization: `Bearer ${import.meta.env.VITE_TMDB_READ_TOKEN}`,
+                    },
+                });
+                const data = await response.json();
+                const filteredMovies = data.results.filter((movie) => movie.adult === false);
+        setMovies(filteredMovies);
+            } catch (error) {
+                console.error('영화 데이터를 가져오는 중 오류 발생:', error);
+            }
+        };
+
+        fetchMovies();
+    }, []);
+
     return (
         <div>
             <br/>
             <h1>🎬 영화 목록</h1>
             <div style={styles.container}>
-                {movieList.results.map((movie) => (
+                {movies.map((movie) => (
                     <MovieCard
                         key={movie.id}
                         id={movie.id}
