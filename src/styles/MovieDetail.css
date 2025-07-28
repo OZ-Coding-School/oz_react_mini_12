@@ -3,31 +3,37 @@
   flex-wrap: wrap;
   gap: 30px;
   padding: 40px;
-  /*텍스트 폰트 설정*/
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
   justify-content: center;
+  box-sizing: border-box;
 }
 
+/* 포스터 이미지 */
 .detail-poster {
   width: 300px;
+  max-width: 100%;
   border-radius: 12px;
-  /*그림자 설정*/
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
 }
 
+/* 상세 정보 컨테이너 */
 .detail-info {
   display: flex;
   flex-direction: column;
-   /*세로 방향 상하단 정렬 및 균형 배치*/
   justify-content: space-between;
   max-width: 500px;
   flex: 1;
+  min-width: 280px;
+  box-sizing: border-box;
 }
 
 .detail-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .rating {
@@ -41,11 +47,96 @@
   font-weight: 500;
 }
 
+/* 개요 섹션 */
 .overview-section {
   margin-top: auto;
   padding-top: 20px;
   border-top: 1px solid #ccc;
   font-size: 15px;
-  /*줄 간격 조절*/
   line-height: 1.6;
+}
+
+/* === 반응형 스타일 === */
+
+/* 모바일 (최대 480px) */
+@media screen and (max-width: 480px) {
+  .detail-container {
+    flex-direction: column;
+    padding: 20px 15px;
+    gap: 20px;
+  }
+
+  .detail-poster {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .detail-info {
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .detail-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .rating {
+    font-size: 16px;
+  }
+
+  .overview-section {
+    font-size: 14px;
+  }
+}
+
+/* 태블릿 (481px ~ 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .detail-container {
+    flex-direction: row;
+    padding: 30px 20px;
+    gap: 25px;
+  }
+
+  .detail-poster {
+    width: 250px;
+  }
+
+  .detail-info {
+    max-width: 400px;
+  }
+
+  .rating {
+    font-size: 17px;
+  }
+
+  .overview-section {
+    font-size: 14.5px;
+  }
+}
+
+/* 데스크톱 (769px 이상) */
+@media screen and (min-width: 769px) {
+  .detail-container {
+    flex-direction: row;
+    padding: 40px;
+    gap: 30px;
+  }
+
+  .detail-poster {
+    width: 300px;
+  }
+
+  .detail-info {
+    max-width: 500px;
+  }
+
+  .rating {
+    font-size: 18px;
+  }
+
+  .overview-section {
+    font-size: 15px;
+  }
 }

@@ -1,13 +1,17 @@
 .movie-card {
-  width: 200px;
+  width: 200px; /* 기본 너비 */
+  max-width: 100%; /* 부모 컨테이너 폭 넘지 않도록 */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
   text-align: center;
   background-color: white;
+  margin-bottom: 30px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 마우스를 올렸을 때 반응성 효과 부여 */
+/* 마우스 오버 시 확대 및 그림자 효과 */
 .movie-card:hover {
   transform: scale(1.03);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -15,14 +19,70 @@
 
 .movie-poster {
   width: 100%;
+  height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 auto;
 }
 
 .movie-title {
   margin: 8px 0;
+  font-size: 1.1rem;
 }
 
 .movie-rating {
   margin: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* ===== 반응형 스타일 ===== */
+
+/* 모바일 (최대 480px) */
+@media screen and (max-width: 480px) {
+  .movie-card {
+    width: 140px;
+    padding: 8px;
+  }
+
+  .movie-title {
+    font-size: 1rem;
+  }
+
+  .movie-rating {
+    font-size: 0.9rem;
+  }
+}
+
+/* 태블릿 (481px ~ 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .movie-card {
+    width: 170px;
+    padding: 9px;
+  }
+
+  .movie-title {
+    font-size: 1.05rem;
+  }
+
+  .movie-rating {
+    font-size: 0.95rem;
+  }
+}
+
+/* 데스크톱 (769px 이상) */
+@media screen and (min-width: 769px) {
+  .movie-card {
+    width: 200px;
+    padding: 10px;
+  }
+
+  .movie-title {
+    font-size: 1.1rem;
+  }
+
+  .movie-rating {
+    font-size: 1rem;
+  }
 }
