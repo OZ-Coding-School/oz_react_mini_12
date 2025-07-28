@@ -1,35 +1,79 @@
-// useState는 react의 상태 관리 훅이다. 얘는 상태 변화할 때 쓴다.
-import { useState } from "react"
-// 영화상세 데이터를 담은 JSON형태의 파일을 갖고 왔다.
-import movieDetailData from "../data/movieDetailData.json";
-// 영화 이미지가 담긴 URL
-const baseUrl = "https://image.tmdb.org/t/p/w500"
-// MovieDetail 컴포넌트.
-export default function MovieDetail() {
-    // useState로 movie를 상태 선언함. movieDetailData를 초기 값으로 지정해서
-    // 고정된 영화 데이터를 상태로 관리한다. setState를 쓰지 않은 것은 관리만 필요해서이다.
-    const [movie] = useState(movieDetailData);
+// 영화 상세 정보를 API로 가져와서 화면에 렌더링하는 곳
 
-    return(
-        // 영화 상세 정보를 담은 컨테이너
+// react-router-dom에서 useParams 훅을 가져옴
+import { useParams } from "react-router-dom";
+
+// useEffect: 컴포넌트가 렌더링될 때 API 요청 수행
+// useState: 받아온 영화 데이터를 저장하기 위한 상태
+import { useEffect, useState } from "react";
+
+const baseUrl = "https://image.tmdb.org/t/p/w500";
+
+export default function MovieDetail() {
+
+    // URL의 /details/:id에서 id 값을 가져옴 (detail.id)
+    const { id } = useParams();
+    // 영화 상태를 저장할 상태 초기값은 null
+    const [movie, setMovie] = useState(null);
+    // 에러 상태 추가
+    const [error, setError] = useState(null);
+    // TMDB API 호출에 필요한 액세스 토큰(환경 변수에서 불러온다. Ex. .env파일)
+    const accessToken = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
+
+    // 컴포넌트가 처음 마운트되거나 id가 바뀔 때마다 API 요청
+    useEffect(() => {
+        async function fetchMovieDetail() {
+            try {
+                // TMDB API를 통해서 HTTP 요청 전송 - 특정한 영화의 상세 정보를 가져오는 곳
+                const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=ko-KR`, {
+                    headers: {
+                        accept: 'application/json',
+                        // 인증 방식 : Bearer토큰 (Ex. 보안용도 이런 과정을 겪지 않으면 누구나 마음 껏 사용할 수 있다.)
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+
+                if(!res.ok) {
+                    throw new Error("서버 응답 실패")
+                }
+                // JSON 형태로 변환한 데이터 저장
+                const data = await res.json();
+                // 여기서 상태 업데이트 후 화면에 반영됨
+                setMovie(data);
+            } catch (error) {
+                console.error("상세 정보 불러오기 실패:", error);
+                setError("영화 정보를 불러오지 못했습니다.")
+            }
+        }
+        
+        // 함수 실행 id가 바뀌면 다시 실행
+        fetchMovieDetail();
+    }, [id]);
+    // 에러가 있을 경우 사용자에게 표시한다
+    if (error) return <p style={{color: 'red'}}>{error}</p>;
+
+    // 아직 데이터를 가져오지 못했으면 로딩 표시
+    if (!movie) return <p>로딩 중...</p>;
+
+    // 데이터를 성공적으로 가져온 경우 렌더링
+    return (
         <div className="movie-detail-container">
-            {/* 포스터 내부에 영화배경이미지를 띄운다 
-            이미지(backdrop_path) 또는 포스터(poster_path) */}
             <div className="poster">
-                {/* ||는 그냥 안전장치 앞의 주소의 이미지가 없으면 뒤에것을 띄우기 위함이다 */}
-            <img src={`${baseUrl}${movie.backdrop_path || movie.poster_path}`} 
-            alt={movie.title} />
+                {/* 포스터 이미지 movie.backdrop_path의 주소 혹은 movie.poster_path의 주소 */}
+                <img src={`${baseUrl}${movie.backdrop_path || movie.poster_path}`} alt={movie.title} />
             </div>
-            {/* 영화의 info를 담은 div ( 영화의 제목 평점 장르 줄거리 등 ) */}
             <div className="info">
                 <div className="title-rating">
-                <h1 className="title">{movie.title}</h1>
-                <p className="rating">평점 : {movie.vote_average}</p>
-            </div>
+                    <h1 className="title">{movie.title}</h1>
+                    <p className="rating">평점 : {movie.vote_average}</p>
+                </div>
                 <div className="genre">
-                    {/* map으로 각 장르 객체에서 name만 뽑아낸 후,join(", ")으로
-                     콤마(,)와 공백을 넣어 문자열로 만들어 보여줌 */}
-                    장르 : {movie.genres.map((genre) => genre.name).join(", ")}
+                    {/* Optional chaining ?.값이 null이나 undefined인 경우 에러 없이 접근할 때 사용 
+                        moive.genres가 유효한 값이면 map을 실행, 아니라면 undefined(렌더링 생략)
+                        */}
+                    {movie.genres?.map((genre) => (
+                        <span key={genre.id}>{genre.name} </span>
+                    ))}
                 </div>
                 <p className="overview">{movie.overview}</p>
             </div>

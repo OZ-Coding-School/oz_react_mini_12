@@ -12,7 +12,8 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Editor directories and files 환경변수 외부 노출 방지 (깃허브)
+.env
 .vscode/*
 !.vscode/extensions.json
 .idea

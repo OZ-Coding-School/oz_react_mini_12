@@ -38,6 +38,7 @@
     margin-bottom: 10px;
 }
 
+
 /* 상세페이지 css */
 
 @media (max-width: 768px) {
@@ -45,6 +46,48 @@
         flex-direction: column;
         align-items: center;
     }
+
+.skeleton-card {
+    width: 200px;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+.skeleton-img{
+    width: 100%;
+    height: 300px;
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.skeleton-text{
+    height: 20px;
+    margin-top: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.skeleton-text.title{
+    width: 80%;
+}
+
+.skeleton-text.rating{
+    width: 50%
+}
+
+@keyframes pulse {
+    0%{
+        background-color: #eee;
+    }
+    50%{
+        background-color: #ddd;
+    }
+    100%{
+        background-color: #eee;
+    }
+}
     
     .poster img {
         width: 100%;
@@ -73,7 +116,6 @@
 }
 
 .poster img {
-    /* width: 300px; */
     width: 100%;
     height: 100%;
 
@@ -84,7 +126,6 @@
 
 }
 
-/* 신규 */
 .poster {
     display: flex;
     align-items: flex-end;
