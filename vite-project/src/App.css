@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+ .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 24px;
+}
