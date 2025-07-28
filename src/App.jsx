@@ -3,13 +3,15 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import MainPage from './pages/MainPage';
 import DetailPage from './pages/DetailPage';
+import Search from './pages/Search'; // ✅ 1. Search 페이지 import
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<MainPage />} />
-        <Route path="/details/:id" element={<DetailPage />} />
+        <Route path="details/:id" element={<DetailPage />} />
+        <Route path="search" element={<Search />} /> {/* ✅ 2. Search 경로 연결 */}
         <Route path="*" element={<div>❌ 페이지를 찾을 수 없습니다</div>} />
       </Route>
     </Routes>

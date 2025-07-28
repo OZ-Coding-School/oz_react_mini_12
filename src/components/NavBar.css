@@ -1,4 +1,5 @@
 /* src/components/NavBar.css */
+
 .navbar {
   background-color: #111;
   padding: 1rem 2rem;
@@ -6,6 +7,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* 반응형 대비 */
 }
 
 .logo {
@@ -18,10 +20,16 @@
   padding: 0.5rem;
   border-radius: 8px;
   border: none;
+  font-size: 1rem;
 }
 
-.buttons .btn {
-  margin-left: 10px;
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login,
+.signup {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   border: none;
@@ -29,4 +37,22 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* ✅ 반응형 대응 */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .auth-buttons {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
 }
