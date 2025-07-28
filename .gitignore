@@ -1,0 +1,12 @@
+# node modules
+node_modules/
+
+# 환경 변수
+.env
+
+# macOS 시스템 파일
+.DS_Store
+
+# 기타
+dist/
+.vscode/

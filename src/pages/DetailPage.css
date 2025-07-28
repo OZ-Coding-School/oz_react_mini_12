@@ -44,3 +44,52 @@
   line-height: 1.6;
   color: #333;
 }
+/* DetailPage.css */
+
+.detail-container {
+  display: flex;
+  flex-direction: row;
+  padding: 2rem;
+  color: white;
+  background-color: #111;
+  min-height: 100vh;
+}
+
+.poster img {
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.info {
+  margin-left: 2rem;
+  flex: 1;
+}
+
+.info h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.info p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.genres {
+  margin-bottom: 1rem;
+}
+
+.genres span {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  padding: 0.3rem 0.7rem;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.overview {
+  line-height: 1.6;
+}
