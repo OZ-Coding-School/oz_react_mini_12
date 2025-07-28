@@ -9,8 +9,6 @@ function NavBar() { //상단 바 렌더링
       <div>
          {/* Home 클릭 시 "/" 경로, 메인 페이지로 이동*/}
         <Link to="/">Home</Link>
-        {/* Details 클릭 시 "/details" 경로, 상세 페이지로 이동*/}
-        <Link to="/details">Details</Link> 
       </div>
     </nav>
   );
