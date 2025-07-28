@@ -1,6 +1,6 @@
 import { useState } from "react";
 // 영화 리스트들을 가져왔다.
-import movieList from "../data/movieListData.json"
+import movieList from "../../data/movieListData.json"
 // 영화의 이미지들을 가져왔다
 import MovieCard from "../components/MovieCard";
 
