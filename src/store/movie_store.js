@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import {
-  fetchCertification,
   fetchGenres,
   fetchPopularMovies,
+  fetchTodayPopularMovies,
 } from "../api/tmbi";
 
 export const useMovieStore = create((set, get) => ({
@@ -14,18 +14,20 @@ export const useMovieStore = create((set, get) => ({
 
   fetchInitialGenres: async () => {
     try {
-      const genres = await fetchGenres();
-      set({ genreMap: genres });
+      const genreMap = await fetchGenres();
+      set({ genreMap: genreMap });
     } catch (e) {
       console.error("genre error:", e);
     }
   },
 
-  fetchInitialMovies: async (pages = 10) => {
+  fetchInitialMovies: async (pages = 5) => {
     set({ loading: true, err: null });
 
     try {
       let allMovies = [];
+      const slideMovies = await fetchTodayPopularMovies();
+
       for (let page = 1; page <= pages; page++) {
         const res = await fetchPopularMovies(page);
         const tagged = res.map((movie) => ({
@@ -35,32 +37,11 @@ export const useMovieStore = create((set, get) => ({
         allMovies = allMovies.concat(tagged);
       }
 
-      // 각 영화 등급 가져오기
-      const enriched = await Promise.all(
-        allMovies.map(async (movie) => {
-          const certification = await fetchCertification(movie.id);
-          return {
-            ...movie,
-            certification,
-          };
-        })
-      );
-
-      // 등급에 따라 필터링
-      const filtered = enriched.filter(
-        (m) => m.certification && !bannedRatings.includes(m.certification)
-      );
-
-      // console.log("allMovies:", allMovies);
-      console.log("allMovies length:", allMovies.length);
-      // console.log("filtered:", filtered);
-      console.log("filtered length:", filtered.length);
-
-      //   const safeMovies = allMovies.filter((m) => !m.adult && isSafe(m));
-      //   set({ movies: safeMovies, loading: false });
-
-      set({ movies: filtered, loading: false });
-      set({ slideMovies: get().movies.filter((m) => m.sourcePage === 1) });
+      set({
+        movies: allMovies,
+        slideMovies: slideMovies,
+        loading: false,
+      });
     } catch (e) {
       set({ err: e, loading: false });
     }
@@ -84,9 +65,6 @@ export const useMovieStore = create((set, get) => ({
   },
 }));
 
-// 필터링할 등급들
-const bannedRatings = ["R", "NC-17", "NR"];
-
 // 키워드에 따른 필터링 => 사용x
 // const bannedKeywords = [
 //   "sex",
@@ -102,3 +80,27 @@ const bannedRatings = ["R", "NC-17", "NR"];
 //   const text = `${movie.title} ${movie.overview}`.toLowerCase();
 //   return !bannedKeywords.some((keyword) => text.includes(keyword));
 // }
+
+
+// 등급에 따라 필터링
+// 필터링할 등급들
+// const bannedRatings = ["R", "NC-17", "NR"];
+
+
+
+
+// // 각 영화 등급 가져오기
+// const enriched = await Promise.all(
+//   allMovies.map(async (movie) => {
+//     const certification = await fetchCertification(movie.id);
+//     return {
+//       ...movie,
+//       certification,
+//     };
+//   })
+// );
+
+//
+// const filtered = enriched.filter(
+//   (m) => m.certification && !bannedRatings.includes(m.certification)
+// );

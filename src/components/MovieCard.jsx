@@ -19,13 +19,13 @@ export function MovieCard({ movie }) {
   );
 }
 
-const Card = styled.div`
+export const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 20rem;
   margin-bottom: 2rem;
-  background-color: #353535;
+  background-color: ${({ theme }) => theme.cardBG};
   border-radius: 1rem;
   padding: 1rem;
 
@@ -34,7 +34,7 @@ const Card = styled.div`
   &:hover {
     cursor: pointer;
     transform: scale(1.05);
-    background-color: #4b4b4b;
+    background-color: ${({ theme }) => theme.cardBGHover};
   }
 
   img {
@@ -48,11 +48,11 @@ const Card = styled.div`
   }
   .title {
     font-family: "Gugi";
-    width:19rem;
+    width: 19rem;
     height: 5rem;
     font-size: 2.2rem;
     font-weight: 700;
-    color: white;
+    color: text;
     word-break: keep-all;
 
     display: -webkit-box;
@@ -67,6 +67,6 @@ const Card = styled.div`
   .vote_average {
     font-size: 1.2rem;
     font-weight: 400;
-    color: gray;
+    color: ${({ theme }) => theme.text};
   }
 `;

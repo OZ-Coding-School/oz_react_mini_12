@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MovieCard } from "../components/movieCard";
+import { MovieCard } from "../components/MovieCard.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar } from "swiper/modules";
 import "swiper/css";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import "../swiper.css";
 import { useMovieStore } from "../store/movie_store.js";
 
-export default function Main() {
+export function Main() {
   const { movies, slideMovies, loading } = useMovieStore();
   const navigate = useNavigate();
 
@@ -43,16 +43,18 @@ export default function Main() {
             ))
           : slideMovies.map((movie) => (
               <SwiperSlide key={movie.id} className="SwiperSlide">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt="poster_swiper"
-                  onClick={() => navigate(`/detail/${movie.id}`)}
-                ></img>
-                <div className="title">{movie.title}</div>
+                <div className="slide_container">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt="poster_swiper"
+                    onClick={() => navigate(`/detail/${movie.id}`)}
+                  ></img>
+                  <div className="title">{movie.title}</div>
+                </div>
               </SwiperSlide>
             ))}
       </Swiper>
-      <div className="general_movies">
+      <MovieGrid>
         {loading
           ? Array.from({ length: 10 }).map((_, idx) => (
               <MovieCardSkeleton key={idx}>
@@ -64,12 +66,12 @@ export default function Main() {
           : movies.map((movie) => (
               <MovieCard key={movie.id} movie={movie}></MovieCard>
             ))}
-      </div>
+      </MovieGrid>
     </MainStyled>
   );
 }
 
-const MovieCardSkeleton = styled.div`
+export const MovieCardSkeleton = styled.div`
   width: 20rem;
   height: 35rem;
   background-color: #444;
@@ -131,35 +133,55 @@ const MainStyled = styled.div`
       justify-content: center;
       align-items: center;
 
-      img {
-        cursor: pointer;
-        height: 100%;
-        width:25rem;
-        padding-bottom: 1.4rem;
-        position: relative;
-      }
-      .title {
-        background-color:#b3b3b3b5;
-        position: absolute;
-        bottom: 3.4rem;
-        height: 4rem;
+      .slide_container {
+        height: 35rem;
         width: 25rem;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        &:hover {
+          img {
+            transform: scale(1.07);
+          }
+          .title {
+            background-color: #b3b3b3fb;
+          }
+        }
 
-        font-family: "Gugi";
-        text-align:center;
-        padding-top:0.8rem;
-        font-size:1.5rem;
-        font-weight:700;
+        img {
+          cursor: pointer;
+          height: 38rem;
+          width: 25rem;
+          padding-bottom: 1.4rem;
+          position: relative;
+          /* border-radius: 0.5rem; */
+          transition: all 0.2s ease;
+        }
+        .title {
+          background-color: #b3b3b3cf;
+          transition: all 0.2s ease;
+          position: absolute;
+          bottom: 3.4rem;
+          height: 4rem;
+          width: 25rem;
+          border-radius: 0 0 0.5rem 0.5rem;
+
+          font-family: "Gugi";
+          text-align: center;
+          padding-top: 0.8rem;
+          font-size: 1.5rem;
+          font-weight: 700;
+        }
       }
     }
   }
-  .general_movies {
-    display: grid;
-    width: 100%;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    align-items: center;
-    margin: 0;
-    gap: 1rem;
-    padding: 4rem;
-  }
+`;
+
+export const MovieGrid = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  margin: 0;
+  gap: 1rem;
+  padding: 4rem;
 `;

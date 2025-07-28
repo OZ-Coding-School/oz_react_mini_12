@@ -21,6 +21,7 @@ export default function Detail() {
       let movieData = getMovieById(Number(movieId));
       // console.log("movieData:", movieData);
       // console.log("genres:", movieData?.genres);
+      // console.log("genre_ids:", movieData?.genre_ids);
 
       if (!movieData) {
         try {
@@ -62,6 +63,9 @@ export default function Detail() {
     overview,
     release_date,
   } = movie;
+
+  console.log(movie.genre_ids)
+  console.log(genreMap);
 
   return (
     <DetailStyled>
@@ -147,7 +151,7 @@ const DetailStyled = styled.div`
   display: flex;
   width: 100%;
   height: 49rem;
-  background-color: #9e9e9e;
+  background-color: ${({ theme }) => theme.background};
   padding: 1rem 3rem;
   gap: 2rem;
 
@@ -173,7 +177,9 @@ const DetailStyled = styled.div`
       font-size: 5rem;
       font-weight: 800;
     }
-    .vote_average, .genre, .overview {
+    .vote_average,
+    .genre,
+    .overview {
       font-size: 1.4rem;
     }
 
@@ -182,7 +188,6 @@ const DetailStyled = styled.div`
     }
     .overview {
       overflow-y: auto;
-      font-size: 1.2rem;
       word-break: keep-all;
     }
   }

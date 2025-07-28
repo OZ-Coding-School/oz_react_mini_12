@@ -3,6 +3,7 @@ import axios from "axios";
 
 const tmdb = axios.create({
   baseURL: "https://api.themoviedb.org/3",
+  // baseURL: "/api/tmdb",
   headers: {
     Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
     "Content-Type": "application/json;charset=utf-8",
@@ -12,14 +13,36 @@ const tmdb = axios.create({
 // 인기 영화 목록 불러오기
 export async function fetchPopularMovies(page = 1) {
   try {
-    const res = await tmdb.get("/movie/popular", {
+    const res = await tmdb.get("/discover/movie", {
       params: {
+        certification_country: "KR",
+        "certification.lte": "15",
         sort_by: "popularity.desc",
-        include_adult: false,
         page: page,
         language: "ko-KR",
       },
     });
+
+    // console.log("fetchPopularMovies:", res)
+
+    return res.data.results;
+  } catch (error) {
+    console.error("TMDB API 오류:", error);
+    throw error;
+  }
+}
+
+// 오늘의 인기 영화 불러오기
+export async function fetchTodayPopularMovies() {
+  try {
+    const res = await tmdb.get("/trending/movie/day", {
+      params: {
+        sort_by: "popularity.desc",
+        language: "ko-KR",
+      },
+    });
+
+    console.log(res);
 
     return res.data.results;
   } catch (error) {
@@ -49,7 +72,7 @@ export async function fetchMovieById(id) {
   }
 }
 
-// 장르 목록-id 맵 불러오기
+// 장르 목록 불러오기
 export async function fetchGenres() {
   try {
     const res = await tmdb.get("/genre/movie/list", {
@@ -58,10 +81,10 @@ export async function fetchGenres() {
       },
     });
 
-    const data = res.data; 
-    let genreMap = data.genres.reduce((map, genre) => {
-      map[genre.id] = genre.name;
-      return map;
+    // console.log("genreList : ",res)
+    const genreMap = res.data.genres.reduce((acc, genre) => {
+      acc[genre.id] = genre.name;
+      return acc;
     }, {});
 
     return genreMap;
@@ -71,20 +94,46 @@ export async function fetchGenres() {
   }
 }
 
-// 연령등급 불러오기
-export async function fetchCertification(movieId, country = "US") {
+// // 연령등급 불러오기
+// const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// export async function fetchCertification(movieId, country = "US") {
+//   try {
+//     await delay(250); // TMDB 요청 제한 회피
+
+//     const res = await tmdb.get(`/movie/${movieId}/release_dates`);
+//     const results = res.data.results;
+
+//     const target = results.find((r) => r.iso_3166_1 === country);
+//     if (!target) return null;
+
+//     const cert = target.release_dates.find((r) => r.certification?.trim());
+//     return cert?.certification || null;
+//   } catch (error) {
+//     console.error("Certification fetch error:", error);
+//     return null;
+//   }
+// }
+
+// 검색할 영화 제목에 따라 api 요청
+export async function searchMoviesByTitle(title) {
   try {
-    const res = await tmdb.get(`/movie/${movieId}/release_dates`);
-    const results = res.data.results;
+    const response = await tmdb.get(`/search/movie`, {
+      params: {
+        query: title,
+        language: "ko",
+      },
+    });
 
-    const target = results.find((r) => r.iso_3166_1 === country);
-    if (!target) return null;
+    const movies = response.data.results;
 
-    const cert = target.release_dates.find((r) => r.certification?.trim());
-    return cert?.certification || null;
+    if (movies.length === 0) {
+      return { message: "검색 결과가 없습니다." };
+    }
+
+    return movies;
   } catch (error) {
-    console.error("Certification fetch error:", error);
-    return null;
+    console.error("API 요청 중 오류 발생:", error.message);
+    return { error: "영화 검색 중 오류가 발생했습니다." };
   }
 }
-
