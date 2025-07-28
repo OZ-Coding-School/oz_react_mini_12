@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export function MovieCard({ movie }) {
-    const { title, vote_average, poster_path, id } = movie;
-    const navigate = useNavigate();
+  const { title, vote_average, poster_path, id } = movie;
+  const navigate = useNavigate();
 
-    const formattedRate = vote_average.toFixed(2);
-  
+  const formattedRate = vote_average.toFixed(2);
+
   return (
     <Card onClick={() => navigate(`/detail/${id}`)}>
       <img
@@ -29,12 +29,12 @@ const Card = styled.div`
   border-radius: 1rem;
   padding: 1rem;
 
-  transition:all 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
     cursor: pointer;
     transform: scale(1.05);
-    background-color:#4b4b4b;
+    background-color: #4b4b4b;
   }
 
   img {
@@ -47,11 +47,22 @@ const Card = styled.div`
     text-align: center;
   }
   .title {
-    height: 6rem;
+    font-family: "Gugi";
+    width:19rem;
+    height: 5rem;
     font-size: 2.2rem;
     font-weight: 700;
     color: white;
     word-break: keep-all;
+
+    display: -webkit-box;
+    display: box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .vote_average {
     font-size: 1.2rem;

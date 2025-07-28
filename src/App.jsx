@@ -2,7 +2,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import Layout from "./components/Layout";
-import { useMovieStore } from "./store/movies";
+import { useMovieStore } from "./store/movie_store.js";
 
 const Main = lazy(() => import("./pages/Main.jsx"));
 const Detail = lazy(() => import("./pages/Detail.jsx"));

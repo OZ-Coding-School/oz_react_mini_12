@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const Layout = memo(() => {
-  console.log("Layout 컴포넌트 렌더링");
+  // console.log("Layout 컴포넌트 렌더링");
   // debounce로 검색 구현
 
   const onChangeSearch = (e) => {
@@ -14,7 +14,7 @@ const Layout = memo(() => {
     <LayoutStyled>
       <nav>
         <Link to={"/"} className="home">
-          {console.log("Link 렌더링")}
+          {/* {console.log("Link 렌더링")} */}
           oz_movie
         </Link>
         <div className="top_bar">
