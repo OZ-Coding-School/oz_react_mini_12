@@ -1,15 +1,16 @@
-import data from '../assets/data/movieListData.json';
+// import data from '../assets/data/movieListData.json';
 import { MovieCard } from './MovieCard';
 
-function HomePage() {
-    
+function HomePage({movies}) {
+
     
     return (
         <>
         <div className='movie-list'>
-        {data.results.map((movie) => (
+        {movies.map((movie) => (
 
             <MovieCard
+        key={movie.id}
         id={movie.id}
         title={movie.title}
         poster={movie.poster_path}

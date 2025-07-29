@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import data from '../assets/data/movieDetailData.json';
+// import data from '../assets/data/movieDetailData.json';
 import { imageUrl } from './config';
 import { useParams } from 'react-router-dom';
 
@@ -35,11 +35,33 @@ const Overview = styled.p`
     color: white;
 `
 
-function DetailPage () {
+const genreMap = {
+  28: 'Action',
+  12: 'Adventure',
+  16: 'Animation',
+  35: 'Comedy',
+  80: 'Crime',
+  99: 'Documentary',
+  18: 'Drama',
+  10751: 'Family',
+  14: 'Fantasy',
+  36: 'History',
+  27: 'Horror',
+  10402: 'Music',
+  9648: 'Mystery',
+  10749: 'Romance',
+  878: 'Science Fiction',
+  10770: 'TV Movie',
+  53: 'Thriller',
+  10752: 'War',
+  37: 'Western'
+};
+
+function DetailPage ({movies}) {
     const { id } = useParams();
-    const movie = data;
+    const movie = movies.find((m) => m.id === Number(id))
     
-    if(Number(id) !== movie.id) {
+    if(!movie) {
         return <h3 style={{color: "white"
         }}>영화를 찾을 수 없습니다</h3>
     }
@@ -53,9 +75,9 @@ function DetailPage () {
                 <MovieInfo>
                     <TitleRating>
                         <h2>{movie.title}</h2>
-                        <span>평점: {movie.vote_average}</span>
+                        <span style={{whiteSpace: 'nowrap'}}>평점: {movie.vote_average}</span>
                     </TitleRating>
-                    <Genre>{movie.genres.map(genre => genre.name).join(',')}</Genre>
+                    <Genre>{movie.genre_ids.map(id => genreMap[id]).join(',')}</Genre>
                     <Overview>{movie.overview}</Overview>
                 </MovieInfo>
             </div>

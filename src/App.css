@@ -28,6 +28,8 @@ padding-top: 40px;
   background-color: #a9a9a924;
   border-radius: 15px;
   padding: 15px;
+  width: 270px;
+  height: 437px;
 
 }
 
@@ -41,7 +43,13 @@ padding-top: 40px;
     min-width: 50rem;
 }
 
-h3 {color: white;}
+h3 {color: white;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+display: block;
+width: 100%;
+}
 
 p {color: white}
 
