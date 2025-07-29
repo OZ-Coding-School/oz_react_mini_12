@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchPopularMovies as apiFetchPopularMovies } from '../../api/movieApi';
+import { fetchPopularMovies } from '../../api/movieApi';
 
-// 비동기 액션: 인기 영화 목록 가져오기
 export const fetchMovies = createAsyncThunk(
   'movies/fetchMovies',
   async (_, { rejectWithValue }) => {
     try {
-      const movies = await apiFetchPopularMovies();
-      return movies;
+      const data = await fetchPopularMovies();
+      const filteredMovies = data.results.filter(movie => !movie.adult);
+      return filteredMovies;
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data?.status_message || error.message);
     }
   }
 );
@@ -17,11 +17,12 @@ export const fetchMovies = createAsyncThunk(
 const movieSlice = createSlice({
   name: 'movies',
   initialState: {
-    list: [], // 영화 목록
-    loading: 'idle', // 'idle' | 'pending' | 'succeeded' | 'failed'
+    list: [],
+    loading: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMovies.pending, (state) => {
@@ -35,6 +36,7 @@ const movieSlice = createSlice({
       .addCase(fetchMovies.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.payload;
+        state.list = [];
       });
   },
 });
