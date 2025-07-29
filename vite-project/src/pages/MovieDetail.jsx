@@ -87,11 +87,11 @@ const MovieDetail = () => {
 console.log(movieData)
   return (
     <div className="overflow-hidden">
-      <img
-        src={`https://image.tmdb.org/t/p/w500${backdrop_path || poster_path}`}
-        alt={title}
-        style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
-      />
+      <img 
+  src={`https://image.tmdb.org/t/p/w500${backdrop_path || poster_path}`} 
+  alt={title} 
+  style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', margin: '0 auto' }} 
+/>
       <h2 className='title'>{title}</h2>
       <p>평점: {vote_average}</p>
       <p>{overview}</p>
