@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  background-color: #1e1e1e;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1100px;
+  margin: 20px auto;
+  border-radius: 10px;
+  color: #fff;
+  font-family: "Orbit", sans-serif;
+  box-sizing: border-box;
+
+  .leftSection {
+    flex: 1 1 300px;
+    margin-right: 10px;
+    height: auto;
+
+    .poster {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  }
+
+  .rightSection {
+    flex: 1 1 300px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+
+    .rating {
+      font-size: 18px;
+      color: #bbb;
+    }
+
+    .genres {
+      margin-top: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 10px;
+
+      .genre {
+        display: inline-block;
+        margin-right: 10px;
+        margin-top: 5px;
+        padding: 5px 12px;
+        border-radius: 30px;
+        background-color: #333;
+        font-size: 14px;
+        color: #fff;
+      }
+    }
+
+    .overview {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #ddd;
+    }
+  }
+  /* 모바일 */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 15px;
+
+    .leftSection {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+
+    .rightSection {
+      width: 100%;
+      padding-left: 0;
+
+      .rating {
+        font-size: 16px;
+      }
+
+      .overview {
+        font-size: 15px;
+      }
+
+      .genres {
+        .genre {
+          font-size: 13px;
+          padding: 4px 10px;
+        }
+      }
+    }
+  }
+}
+ /* 태블릿 */
+@media (max-width: 1024px) {
+  .container {
+    padding: 18px;
+    max-width: 900px;
+  }
+
+  .rightSection {
+    padding-left: 15px;
+
+    .rating {
+      font-size: 17px;
+    }
+    .overview {
+      font-size: 15px;
+    }
+  }
+}
+.loading,
+.error {
+  text-align: center;
+  font-size: 20px;
+  padding: 50px;
+}
+
+.loading {
+  color: #ccc;
+}
+
+.error {
+  color: #ff4d4d;
+}
