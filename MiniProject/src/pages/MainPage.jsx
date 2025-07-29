@@ -1,19 +1,28 @@
 import React, {useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
 
 function MainPage() {
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('query');
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const fetchMovies = async () => {
+            const url = query
+                ? `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=ko-KR`
+                : `https://api.themoviedb.org/3/movie/popular?language=ko-KR`;
+
             try {
-                const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=ko-KR', {
+                const response = await fetch(url, {
                     headers: {
                         accept:'application/json',
                         Authorization: `Bearer ${import.meta.env.VITE_TMDB_READ_TOKEN}`,
                     },
                 });
+
                 const data = await response.json();
+
                 const filteredMovies = data.results.filter((movie) => movie.adult === false);
         setMovies(filteredMovies);
             } catch (error) {
@@ -22,12 +31,10 @@ function MainPage() {
         };
 
         fetchMovies();
-    }, []);
+    }, [query]);
 
     return (
         <div>
-            <br/>
-            <h1>🎬 영화 목록</h1>
             <div style={styles.container}>
                 {movies.map((movie) => (
                     <MovieCard
@@ -44,6 +51,9 @@ function MainPage() {
 }
 
 const styles = {
+    page: {
+        paddingTop: '80px',
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
