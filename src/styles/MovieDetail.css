@@ -1,8 +1,13 @@
+/* src/pages/MovieDetail.css */
+
 .movie-detail {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  background-color: #111; /* 배경 어둡게 */
+  color: #eee; /* 전체 글자 기본 밝게 */
+  min-height: 100vh;
+  padding-bottom: 40px;
 }
 
 .movie-backdrop img {
@@ -16,16 +21,19 @@
   max-width: 800px;
   text-align: center;
   margin-top: 20px;
+  padding: 0 20px;
 }
 
 .movie-info h1 {
   font-size: 2rem;
   margin-bottom: 10px;
+  color: #fff;
 }
 
 .rating {
   font-size: 1.2rem;
   margin-bottom: 10px;
+  color: #ffd700;
 }
 
 .genres {
@@ -44,5 +52,7 @@
 
 .overview {
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: #f0f0f0; /* ✅ 글자가 잘 보이도록 밝게 수정 */
+  margin-top: 20px;
 }
