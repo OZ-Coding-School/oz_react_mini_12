@@ -3,15 +3,30 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Navigation, Pagination, Mousewheel} from 'swiper/modules'
+
 // 로딩 중 보여줄 뼈대 UI컴포넌트
 import SkeletonCard from '../components/SkeletonCard';
 import { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
+import BackgroundLayer from '../components/BackgroundLayer';
+
+
+// function extractYouTubeId(url) {
+//     if(!url) return "";
+//   const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+//   const match = url.match(regExp);
+//   return match ? match[1] : "";
+// }
 
 export default function Home() {
+    // 영화 상태
     const [movies, setMovies] = useState([]);
+
+    const [trailerId, setTrailerId] = useState("");
+
     // 로딩여부상태 초기 값을 true로 둠 
     const [loading, setLoading] = useState(true);
+
     // 환경변수에서 TMDB API 엑세스 토큰을 갖고옴
     const accessToken = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
 
@@ -26,14 +41,41 @@ export default function Home() {
                         // 토큰을 헤더에 포함시켜 인증함
                         Authorization: `Bearer ${accessToken}`,
                     }
-                }
-            );
+                });
             // 응답 데이터 파싱 
                 const data = await res.json();
                 // 성인 영화는 제외하는 필터링
                 const filtered = data.results.filter(movie => movie.adult === false);
+                
+                // 각 영화별 예고편 가져오기
+                const moviesWithTrailers = await Promise.all(
+                    filtered.map(async(movie)=>{
+                    const videoRes = await fetch(
+                        `https://api.themoviedb.org/3/movie/${movie.id}/videos?language=ko-KR`, 
+                        {
+                        headers:{
+                            accept: 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        }
+                    }
+                );
+                    const videoData = await videoRes.json();
+                    const trailer = videoData.results.find(
+                        (video) => 
+                            video.type === "Trailer" &&
+                            video.site === "YouTube" &&
+                            video.official === true
+                    );
+                    const fallbackKey = "dQw4w9WgXcQ";
+                    return {
+                        ...movie,
+                        trailer: trailer ? trailer.key : fallbackKey,
+                    };
+                })
+            );
+                
                 // 필터링 후 movies에 저장
-                setMovies(filtered);
+                setMovies(moviesWithTrailers);
             } catch (error) {
                 // API호출 실패 시 에러를 콘솔에 출력
                 console.error("영화 목록 가져오기 실패:", error);
@@ -52,15 +94,17 @@ export default function Home() {
         return (
             <div className='movie-grid'>
                 {/* 배열 길이 6만큼 SkeletonCard 컴포넌트 6개를 렌더링 */}
-                {[...Array(6).map((_, index) => (
-                    <SkeletonCard key={index} />
-                ))]}
+                {[...Array(6)].map((_, index) => (
+                <SkeletonCard key={index} />
+                ))}
             </div>
         );
     }
 
     // 데이터 로딩 후 슬라이더 UI를 렌더링
     return (
+    <div style={{position: "relative", zIndex: 0}}>
+        <BackgroundLayer videoUrl={trailerId}/>
         <Swiper
         // 사용할 모듈 지정
         modules={[Navigation, Pagination, Mousewheel]}
@@ -90,13 +134,16 @@ export default function Home() {
                 <SwiperSlide key={movie.id}>
                     {/* 영화 카드 컴포넌트에 영화 정보 전달 */}
                 <MovieCard
-                    id={movie.id}
-                    title={movie.title}
-                    poster_path={movie.poster_path}
-                    vote_average={movie.vote_average}
+                id={movie.id}
+                title={movie.title}
+                poster_path={movie.poster_path}
+                vote_average={movie.vote_average}
+                trailerUrl={movie.trailer} // URL 그대로 넘김
+                onPlayTrailer={(id) => setTrailerId(id)} // 클릭 시 YouTube ID 설정
                 />
             </SwiperSlide>
             ))}
         </Swiper>
+    </div>
     );
 }

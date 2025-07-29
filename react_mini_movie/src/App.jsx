@@ -3,6 +3,7 @@ import './App.css';
 import Layout from '../components/Layout';
 import MovieDetail from '../components/MovieDetail';
 import Home from '../pages/Home';
+import Search from '../pages/Search';
 
 export default function App() {
 return (
@@ -10,6 +11,7 @@ return (
     <Route element={<Layout />}>
       <Route path='/' element={<Home />} />
       <Route path='details/:id' element={<MovieDetail />} />
+      <Route path='search' element={<Search />} />
     </Route>
   </Routes>
   );

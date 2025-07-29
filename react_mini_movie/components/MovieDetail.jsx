@@ -11,6 +11,7 @@ const baseUrl = "https://image.tmdb.org/t/p/w500";
 
 export default function MovieDetail() {
 
+    // URL의 동적 경로값(id)등을 추출해주는 React Router의 hook
     // URL의 /details/:id에서 id 값을 가져옴 (detail.id)
     const { id } = useParams();
     // 영화 상태를 저장할 상태 초기값은 null
@@ -20,6 +21,7 @@ export default function MovieDetail() {
     // TMDB API 호출에 필요한 액세스 토큰(환경 변수에서 불러온다. Ex. .env파일)
     const accessToken = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
 
+    // 컴포넌트가 화면에 렌더링되거나, 어떤 값이 바뀔 때 “효과(부수 작업)”를 실행할 수 있게 해주는 React Hook
     // 컴포넌트가 처음 마운트되거나 id가 바뀔 때마다 API 요청
     useEffect(() => {
         async function fetchMovieDetail() {
@@ -36,9 +38,13 @@ export default function MovieDetail() {
                 if(!res.ok) {
                     throw new Error("서버 응답 실패")
                 }
+
+                // await는 promise가 완료 될때까지 기다림 실패시 트라이/캐치로 잡아줘야 함
                 // JSON 형태로 변환한 데이터 저장
+                // 서버 응답을 JSON 형태로 파싱할 때까지 기다림
                 const data = await res.json();
-                // 여기서 상태 업데이트 후 화면에 반영됨
+                // 서버 응답을 JSON 형태로 파싱할 때까지 기다림
+                // 상태 업데이트 후 컴포넌트가 재렌더링되어 화면에 변경사항 반영
                 setMovie(data);
             } catch (error) {
                 console.error("상세 정보 불러오기 실패:", error);
