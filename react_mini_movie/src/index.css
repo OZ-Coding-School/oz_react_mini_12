@@ -1,3 +1,12 @@
 @import 'swiper/css';
 @import 'swiper/css/navigation'
 @import 'swiper/css/pagination'
+@import "tailwindcss/preflight";
+@tailwind utilities
+
+/* 직접 작성할 커스텀 스타일은 아래처럼 작성 */
+@layer utilities {
+  .my-btn {
+    @apply bg-blue-500 text-white px-4 py-2 rounded;
+  }
+}
