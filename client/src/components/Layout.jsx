@@ -1,12 +1,11 @@
-// client/src/components/Layout.jsx
-import React from "react";
+// src/components/Layout.jsx
 import NavBar from "./NavBar";
 import { Outlet } from "react-router-dom";
 
-function Layout() {
+function Layout({ onSearch }) {
   return (
     <>
-      <NavBar />
+      <NavBar onSearch={onSearch} /> {/* onSearch 전달 */}
       <Outlet />
     </>
   );

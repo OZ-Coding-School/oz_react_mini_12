@@ -1,45 +1,23 @@
-import React from "react";
-import "./App.css";
-import MovieCard from "./components/MovieCard";
-import movieListData from "./data/movieListData.json";
+// src/App.jsx
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import MovieDetail from "./components/MovieDetail";
+import Home from "./pages/Home";
+import SearchResult from "./pages/SearchResult";
 
 function App() {
+  const [query, setQuery] = useState("");
+
   return (
-    <div className="app">
-      <div className="container">
-        <h1>영화 리스트</h1>
-        <div className="movie-list">
-          {movieListData.results?.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              id={movie.id} // 추가!!
-              poster_path={movie.poster_path}
-              title={movie.title}
-              vote_average={movie.vote_average}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout onSearch={setQuery} />}> {/* 여기 onSearch 전달 */}
+        <Route index element={<Home />} />
+        <Route path="movie/:id" element={<MovieDetail />} />
+        <Route path="search" element={<SearchResult />} />
+      </Route>
+    </Routes>
   );
 }
 
-
 export default App;
-
-//
-//
-// App.jsx
-
-// import React from "react";
-// import MovieDetail from "./components/MovieDetail";
-
-// function App() {
-//   return (
-//     <div className="app">
-//       <MovieDetail />
-//     </div>
-//   );
-// }
-
-// export default App;
