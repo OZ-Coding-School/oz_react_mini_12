@@ -1,15 +1,13 @@
 import React from "react";
-import "../styles/MovieCard.css"; //css 경로 지정
+import "../styles/MovieCard.css"; // CSS 파일 import
 
-/*props로 제목, 포스터 이미지 경로, 평점 내려받기*/
 function MovieCard({ title, poster_path, vote_average }) {
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
-  /*내부 내용*/
   return (
-    <div className="movie-card">
+    <div className="movie-card" style={{ cursor: "pointer" }}>
       <img
-        src={`${imageBaseUrl}${poster_path}`} //기본 이미지 url에 데이터 포스터 경로를 합쳐서 완성
+        src={`${imageBaseUrl}${poster_path}`}
         alt={title}
         className="movie-poster"
       />
