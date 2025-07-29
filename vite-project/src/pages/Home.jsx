@@ -8,7 +8,7 @@ const Home = () => {
     const fetchPopularMovies = async () => {
       console.log(import.meta.env)
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/popular', {
+        const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=ko-KR', {
           headers: {
             accept: 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_TOKEN}`,
