@@ -1,0 +1,76 @@
+.form-container {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 40px 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #222;
+  text-align: center;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-form label {
+  text-align: left;
+  margin: 8px 0 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  margin-bottom: 6px;
+}
+
+.input.error {
+  border-color: #e74c3c;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.submit-button {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: block;       /* block으로 만들어서 */
+  margin-left: auto;    /* 좌우 마진 자동으로 하여 */
+  margin-right: auto;   /* 가운데 정렬 */
+}
+
+.signup-form label {
+  text-align: left;  /* 왼쪽 정렬 */
+  margin: 8px 0 4px 30px;
+  font-size: 14px;
+  color: #333;
+  padding: 3px;
+}
+
+.submit-button:hover {
+  background-color: #333;
+}

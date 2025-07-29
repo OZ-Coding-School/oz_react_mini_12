@@ -6,6 +6,9 @@ import App from "./App"; //메인 페이지
 import MovieDetail from "./pages/MovieDetail"; //세부 페이지
 import Layout from "./components/Layout"; //전체 레이아웃
 import SearchPage from "./pages/SearchPage"; //검색 결과 페이지
+import SignupPage from "./pages/SignupPage"; //회원가입 페이지
+import LoginPage from "./pages/LoginPage"; //로그인 페이지
+import AuthStatus from "./components/AuthStatus"; //알림 및 전체 설정 컴포넌트
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   /*라우팅 기능을 활성화*/
@@ -19,6 +22,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="search" element={<SearchPage />} />
         {/* "/details/:id" 경로로 접속하면 Layout 내부에 MovieDetail 컴포넌트를 렌더링 */}
         <Route path="details/:id" element={<MovieDetail />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="signup" element={<SignupPage />} />
       </Route>
     </Routes>
   </BrowserRouter>
