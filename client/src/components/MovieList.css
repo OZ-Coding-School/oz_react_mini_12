@@ -1,0 +1,196 @@
+.movie-list-container {
+  padding: 1rem 1.5rem;
+  position: relative;
+  color: white;
+}
+
+.movie-list-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  user-select: none;
+  color: white;  
+  text-shadow: none; 
+}
+
+.highlight-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ffc107;
+  text-shadow: 0 0 10px #ffc107;
+  margin-bottom: 1.5rem;
+  user-select: none;
+}
+
+.movie-list-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-list-track-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.movie-list-track {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1rem;
+  transition: transform 0.5s ease-in-out;
+  min-width: max-content;    /* 카드들이 항상 한 줄로 보이게 */
+  justify-content: center;   /* 슬라이드 트랙 중앙 정렬 */
+}
+
+.movie-list-item {
+  width: calc(100% / 4);
+}
+
+.slide-btn {
+  position: absolute;
+  bottom: -3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 4px;
+  margin: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.slide-btn.left {
+  left: calc(50% - 30px);
+}
+
+.slide-btn.right {
+  left: calc(50% + 30px);
+}
+
+.slide-btn:hover:not(:disabled) {
+  background-color: #555;
+}
+
+.slide-btn:disabled {
+  background-color: #777;
+  cursor: not-allowed;
+}
+
+/* 점(dot) + 화살표 네비게이션 */
+.dot-navigation {
+  margin-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #555;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dot.active {
+  background: #ffc107;
+}
+
+.dot-nav-btn {
+  background: none;
+  border: none;
+  color: #ffc107;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0 8px;
+  user-select: none;
+}
+
+.dot-nav-btn:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* 인기영화(메인 슬라이드)만 */
+.movie-list-container.popular {
+  margin-bottom: 2.7rem;
+  padding: 1.7rem 0 1.2rem 0;
+  background: linear-gradient(90deg, #191919 80%, #222831 100%);
+  border-radius: 22px;
+  box-shadow: 0 6px 40px 0 rgba(255,193,7,0.07);
+}
+
+.movie-list-container.popular .movie-list-title {
+  font-size: 2.3rem;
+  letter-spacing: -0.03em;
+  color: #ffc107;
+  margin-bottom: 1.7rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.movie-list-container.popular .movie-list-track {
+  gap: 1.2rem;                  /* 카드 사이 간격만 조절 */
+  justify-content: center;      /* 카드 중앙 정렬 */
+}
+
+.movie-list-container.popular .movie-list-item {
+  width: 230px;            /* 카드 넓이 키움 */
+}
+
+.movie-list-container.popular .movie-card {
+  box-shadow: 0 6px 32px 0 rgba(255,193,7,0.13);
+  background: #232323;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.movie-list-container.popular .movie-card:hover {
+  transform: translateY(-10px) scale(1.07);
+  box-shadow: 0 10px 40px 0 rgba(255,193,7,0.22);
+}
+
+.movie-list-container.popular .movie-title {
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.movie-list-container.popular .movie-rank {
+  background: #ffc107;
+  color: #242424;
+  font-weight: 800;
+  border-radius: 8px;
+  font-size: 1.07rem;
+  padding: 0.2rem 0.9rem 0.2rem 0.8rem;
+  margin-bottom: 0.7rem;
+  margin-top: 0.13rem;
+  display: block;
+  width: fit-content;
+  box-shadow: 0 0 7px #fff4;
+}
+
+
+/* 반응형 */
+@media (max-width: 992px) {
+  .movie-list-item {
+    width: calc(100% / 3);
+  }
+}
+
+@media (max-width: 576px) {
+  .movie-list-item {
+    width: calc(100% / 2);
+  }
+}

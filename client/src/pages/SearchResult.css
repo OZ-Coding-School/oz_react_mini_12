@@ -1,0 +1,17 @@
+/* src/pages/SearchResult.css */
+
+.search-result {
+  padding: 2rem;
+  color: white;
+  font-family: sans-serif;
+}
+
+.result-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+  /* justify-content: flex-start; */
+}
+
