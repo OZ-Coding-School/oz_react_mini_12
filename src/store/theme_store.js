@@ -8,7 +8,7 @@ export const useThemeStore = create(
         light: {
           background: "#ffffff",
           text: "#000000",
-          inputBackground: "#f0f0f0",
+          inputBackground: "#fcfcfc",
           border: "#000000",
           buttonBackground: "#6200ea",
           buttonText: "#ffffff",

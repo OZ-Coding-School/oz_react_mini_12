@@ -9,21 +9,32 @@ import { useThemeStore } from "../store/theme_store";
 const Layout = () => {
   // console.log("Layout 컴포넌트 렌더링");
   const { query } = useParams();
-  const [inputValue, setInputValue] = useState(query || "");
-  
+  // 인풋밸류는 query를 저장하고 새로고침시 검색UI에 보여주기 위해 쓰임!
+  const [inputValue, setInputValue] = useState(
+    query?.includes("genre_") ? "" : query || ""
+  );
+
   // const { toggleTheme, isDark } = useThemeStore();
-  const isDark = useThemeStore((state) => state.isDark); 
+  const isDark = useThemeStore((state) => state.isDark);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   const navigate = useNavigate();
 
-  // debounce로 검색 구현
-  const debouncedSearch = useCallback(
-    debounce((value) => {
+  // 즉시 검색 함수
+  const immediateSearch = useCallback(
+    (value) => {
       //  공백만 있다면 검색 x, 값이 있을때만 실행
       if (value.trim()) {
         navigate(`/search/${value.trim()}`);
       }
+    },
+    [navigate]
+  );
+
+  // debounce로 검색 구현
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      immediateSearch(value);
     }, 500),
     []
   );
@@ -32,6 +43,19 @@ const Layout = () => {
     const value = e.target.value;
     setInputValue(value);
     debouncedSearch(value);
+  };
+
+  // 엔터키 누를때 즉시 검색
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      debouncedSearch.cancel();
+      immediateSearch(e.target.value);
+    }
+  };
+
+  // 검색버튼(돋보기) 누를때 즉시검색
+  const handleSearchButton = () => {
+    immediateSearch(inputValue);
   };
 
   return (
@@ -51,9 +75,10 @@ const Layout = () => {
             <input
               type="text"
               value={inputValue}
-              onChange={(e) => onChangeSearch(e)}
+              onChange={onChangeSearch}
+              onKeyDown={handleKeyDown}
             />
-            <span>🔍</span>
+            <span onClick={handleSearchButton}>🔍</span>
           </div>
           <div className="login">
             <div>로그인</div>
@@ -133,6 +158,7 @@ const LayoutStyled = styled.div`
           color: ${({ theme }) => theme.text};
         }
         span {
+          cursor: pointer;
           position: absolute;
           right: 1rem;
         }

@@ -32,11 +32,13 @@ export async function fetchPopularMovies(page = 1) {
   }
 }
 
-// 오늘의 인기 영화 불러오기
+// 이번주의 인기 영화 불러오기
 export async function fetchTodayPopularMovies() {
   try {
-    const res = await tmdb.get("/trending/movie/day", {
+    const res = await tmdb.get("/trending/movie/week", {
       params: {
+        certification_country: "KR",
+        "certification.lte": "15",
         sort_by: "popularity.desc",
         language: "ko-KR",
       },
@@ -115,7 +117,7 @@ export async function fetchGenres() {
 //   }
 // }
 
-// 검색할 영화 제목에 따라 api 요청
+// 제목으로 검색
 export async function searchMoviesByTitle(title) {
   try {
     const response = await tmdb.get(`/search/movie`, {
@@ -135,5 +137,29 @@ export async function searchMoviesByTitle(title) {
   } catch (error) {
     console.error("API 요청 중 오류 발생:", error.message);
     return { error: "영화 검색 중 오류가 발생했습니다." };
+  }
+}
+
+// 장르별 검색
+export async function searchMoviesbyGenre(genre_id) {
+  try {
+    const res = await tmdb.get("/discover/movie", {
+      params: {
+        certification_country: "KR",
+        "certification.lte": "15",
+        sort_by: "popularity.desc",
+        // page: page,
+        language: "ko-KR",
+        with_genres: genre_id,
+      },
+    });
+
+    // console.log("searchMoviesbyGenre:", res)
+    // console.log("genre_id type:", typeof(genre_id));
+
+    return res.data.results;
+  } catch (error) {
+    console.error("TMDB API 오류:", error);
+    throw error;
   }
 }

@@ -37,6 +37,10 @@ export const useMovieStore = create((set, get) => ({
         allMovies = allMovies.concat(tagged);
       }
 
+      // 확인용
+      // console.log(allMovies);
+      // console.log(slideMovies);
+
       set({
         movies: allMovies,
         slideMovies: slideMovies,
@@ -81,13 +85,9 @@ export const useMovieStore = create((set, get) => ({
 //   return !bannedKeywords.some((keyword) => text.includes(keyword));
 // }
 
-
 // 등급에 따라 필터링
 // 필터링할 등급들
 // const bannedRatings = ["R", "NC-17", "NR"];
-
-
-
 
 // // 각 영화 등급 가져오기
 // const enriched = await Promise.all(

@@ -63,6 +63,7 @@ export const Card = styled.div`
     box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.11;
   }
   .vote_average {
     font-size: 1.2rem;
