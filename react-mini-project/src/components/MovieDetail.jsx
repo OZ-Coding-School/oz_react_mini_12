@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";  
 import axios from "axios";
-import './MovieDetail.css';
+import './MovieDetail.scss';
 
 const MovieDetail = () => {
   const { id: movieId } = useParams();
@@ -19,7 +19,7 @@ const MovieDetail = () => {
         }
 
         const res = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ko-KR`
         );
         setMovie(res.data);
         setLoading(false); 
@@ -32,7 +32,7 @@ const MovieDetail = () => {
   }, [movieId]);
 
   if (loading) { 
-    return <div className="loading">로딩 중...</div>;  // 로딩 중 표시
+    return <div className="loading">로딩 중...</div>;  
   }
 
   if (!movie) {
