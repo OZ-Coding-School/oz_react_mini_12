@@ -26,11 +26,16 @@ const MovieList = () => {
       const data = await response.json();
 
       if (data.results && data.results.length > 0) {
-        setMovies(prev => [...prev, ...data.results]);
-        setHasMore(data.page < data.total_pages);
-      } else {
-        setHasMore(false);
-      }
+  setMovies(prev => {
+    const existingIds = new Set(prev.map(m => m.id));
+    const newUniqueMovies = data.results.filter(m => !existingIds.has(m.id));
+    return [...prev, ...newUniqueMovies];
+  });
+  setHasMore(data.page < data.total_pages);
+} else {
+  setHasMore(false);
+}
+
     } catch (error) {
       console.error('Failed to fetch movies:', error);
     } finally {

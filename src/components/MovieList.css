@@ -61,3 +61,54 @@
   text-decoration: none;
   color: inherit;
 }
+
+/* 반응형 */
+
+.movie-list-container {
+  max-width: 1200px; /* 화면 너비 제한 */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.main-title {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* 카드 그리드 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* 태블릿 */
+@media (max-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .main-title {
+    font-size: 32px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
+  .movie-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .main-title {
+    font-size: 24px;
+  }
+
+  .load-more-button {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+  }
+}
