@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './MovieList.css';
 import './MovieDetail.css';
+import './SearchResults';
+import '../hooks/useDebounce';
 
 const API_TOKEN = import.meta.env.VITE_REACT_APP_API_TOKEN;
 
