@@ -1,7 +1,7 @@
 // src/components/SignupForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../hooks/supabaseSetting';
+import supabase, { checkEmailExists } from '../hooks/supabaseSetting'; // ✅ 추가
 import './SignupForm.css';
 
 const SignupForm = () => {
@@ -44,6 +44,13 @@ const SignupForm = () => {
     if (errorMsg) {
       setMessage(errorMsg);
       return;
+    }
+
+    // 🔹 추가: 이메일 중복 체크
+    const exists = await checkEmailExists(formData.email);
+    if (exists) {
+      setMessage('중복된 이메일 입니다, 가입할 수 없습니다.');
+      return; // 버튼 동작 차단
     }
 
     // Supabase 회원가입 처리
