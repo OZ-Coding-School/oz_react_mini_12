@@ -34,7 +34,7 @@ export async function logout() {
 export default supabase;
 
 
-// 🔹 추가: 이메일 중복 확인 함수
+// 추가: 이메일 중복 확인 함수
 export async function checkEmailExists(email) {
   if (!email) return false;
 

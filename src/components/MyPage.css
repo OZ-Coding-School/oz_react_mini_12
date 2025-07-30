@@ -1,0 +1,46 @@
+.mypage-wrapper {
+  max-width: 500px;
+  margin: 50px auto;
+  text-align: center; /* 컨테이너 전체 중앙 정렬 */
+  background: #f9f9f9;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mypage-wrapper h2 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.mypage-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.mypage-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* 동그랗게 */
+  object-fit: cover;
+  border: 3px solid #8000FF; /* 보라색 테두리 */
+}
+
+.mypage-info {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.8;
+  color: white;
+  text-align: center;
+}
+
+.mypage-info p {
+  margin: 8px 0;
+  text-align: center;
+}
+
+.mypage-info strong {
+  color: #8000FF;
+}

@@ -7,6 +7,7 @@ import MovieDetail from './components/MovieDetail';
 import SearchResults from './components/SearchResults';
 import SignupForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
+import MyPage from './components/MyPage';
 function App() {
   return (
     <Router>
@@ -17,6 +18,7 @@ function App() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="login" element={<LoginForm />} />
+          <Route path="mypage" element={<MyPage />} />
         </Route>
       </Routes>
     </Router>
