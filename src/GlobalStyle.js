@@ -14,3 +14,7 @@ export const GlobalSyle = createGlobalStyle`
     color: var(--text-color);
   }
 `;
+
+// ${({ theme }) => theme.~~~} 
+// ==> ${Theme("")};  
+export const Theme = (key) => (props) => props.theme[key];

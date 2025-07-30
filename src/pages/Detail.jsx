@@ -1,16 +1,27 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchGenres, fetchMovieById } from "../api/tmbi";
 import { useMovieStore } from "../store/movie_store.js";
-
+import { Theme } from "../GlobalStyle.js";
 
 export default function Detail() {
   const { getMovieById, genreMap } = useMovieStore();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   // console.log(movieId);
+
+  const navigate = useNavigate();
+
+  const searchByGenre = useCallback(
+    (value) => {
+      navigate(`/search/genre_${value}`);
+      // console.log("genre search from detail:", value);
+    },
+
+    [navigate]
+  );
 
   const [isLoad, setIsLoad] = useState(false);
 
@@ -64,7 +75,7 @@ export default function Detail() {
     release_date,
   } = movie;
 
-  console.log(movie.genre_ids)
+  console.log(movie.genre_ids);
   console.log(genreMap);
 
   return (
@@ -78,8 +89,14 @@ export default function Detail() {
       <div className="info">
         <div className="title">{title}</div>
         <div className="vote_average">평점 : ⭐{vote_average.toFixed(2)}</div>
-        <div className="genre">
-          {genre_ids?.map((el) => genreMap[el]).join(", ")}
+        <div className="genre_container">
+          {genre_ids?.map((id) => (
+            // genreMap[el]).join(", ")
+            <div className="genre" onClick={() => searchByGenre(id)} key={id}>
+              {genreMap[id]}
+            </div>
+          ))}
+          <div className="release_date">{release_date}</div>
         </div>
         <div className="overview">{overview}</div>
       </div>
@@ -151,7 +168,7 @@ const DetailStyled = styled.div`
   display: flex;
   width: 100%;
   height: 49rem;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${Theme("background")};
   padding: 1rem 3rem;
   gap: 2rem;
 
@@ -178,13 +195,28 @@ const DetailStyled = styled.div`
       font-weight: 800;
     }
     .vote_average,
-    .genre,
     .overview {
       font-size: 1.4rem;
     }
 
-    .genre {
+    .genre_container {
       height: 3rem;
+      display: flex;
+    }
+    .genre {
+      font-size: 1.5rem;
+      cursor: pointer;
+      background-color: ${Theme("cardBG")};
+      &:hover {
+        background-color: ${Theme("cardBGHover")};
+      }
+      margin-right: 1rem;
+      width: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
     }
     .overview {
       overflow-y: auto;

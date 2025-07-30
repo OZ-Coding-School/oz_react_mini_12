@@ -19,6 +19,7 @@ export function Main() {
 
   return (
     <MainStyled>
+      <div className="swiper_description">이번 주 영화 TOP 20</div>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar]}
         direction="horizontal"
@@ -119,6 +120,14 @@ export const MovieCardSkeleton = styled.div`
 const MainStyled = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  .swiper_description{
+    font-size: 1.8rem;
+    position: absolute;
+    top: 0.6rem;
+    left: 12rem;
+  }
 
   .swiper {
     height: 40rem;

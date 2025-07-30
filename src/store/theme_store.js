@@ -8,13 +8,13 @@ export const useThemeStore = create(
         light: {
           background: "#ffffff",
           text: "#000000",
-          inputBackground: "#f0f0f0",
+          inputBackground: "#fcfcfc",
           border: "#000000",
           buttonBackground: "#6200ea",
           buttonText: "#ffffff",
-          homeText: "#000000",
           cardBG: "#e7e7e7c0",
           cardBGHover: "#c9c9c9b9",
+          overray: "#00000094",
         },
         dark: {
           background: "#000000",
@@ -23,11 +23,13 @@ export const useThemeStore = create(
           border: "#ffffff",
           buttonBackground: "#6c01fd",
           buttonText: "#fad4fd",
-          homeText: "#ffffff",
           cardBG: "#353535",
           cardBGHover: "#4b4b4b",
+          overray: "#ffffff28",
         },
       },
+      // ${({ theme }) => theme.~~~}
+      // ==> ${Theme("")};
 
       isDark: true,
 
@@ -41,7 +43,7 @@ export const useThemeStore = create(
       //   getTheme: () => (get().isDark ? get().themes.dark : get().themes.light),
       getTheme: () => {
         const theme = get().isDark ? get().themes.dark : get().themes.light;
-        return { ...theme }; 
+        return { ...theme };
       },
     }),
     { name: "theme-storage" }
