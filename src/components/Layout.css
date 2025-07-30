@@ -1,65 +1,4 @@
-.search-bar-wrapper {
-  display: flex;
-  gap: 8px;
-}
-
-.search-input,
-.search-button {
-  height: 40px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.search-input {
-  padding: 0 12px;
-  flex: 1; /* 너비 자동 조절, 필요시 제거 */
-}
-
-.search-button {
-  padding: 0 16px;
-  background-color: #8000FF;
-  color: white;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.search-button:hover {
-  background-color: #6600CC;
-}
-
-/* 기본 레이아웃 */
-.layout-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-width: 100vw;
-}
-
-.header {
-  background-color: #222;
-  color: white;
-  padding: 16px;
-}
-
-.nav-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* 로고 */
-.logo a {
-  color: white;
-  text-decoration: none;
-}
-
-/* 검색바 */
+/* ===== 검색바 ===== */
 .search-bar-wrapper {
   display: flex;
   gap: 8px;
@@ -95,6 +34,35 @@
   background-color: #6600CC;
 }
 
+/* ===== 레이아웃 ===== */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.header {
+  background-color: #222;
+  color: white;
+  padding: 16px;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 로고 */
+.logo a {
+  color: white;
+  text-decoration: none;
+}
+
 /* 메뉴 링크 */
 .nav-links {
   display: flex;
@@ -110,9 +78,60 @@
   text-decoration: underline;
 }
 
-/* 햄버거 버튼 - 모바일에서만 보이기 */
-.hamburger {
+/* ===== 프로필 드롭다운 ===== */
+.profile-container {
+  position: relative;
   display: flex;
+  flex-direction: column;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  min-width: 140px;
+  z-index: 1000;
+  animation: dropdownFade 0.2s ease;
+}
+
+.profile-menu a,
+.profile-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-menu a:hover,
+.profile-menu button:hover {
+  background-color: #444;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 햄버거 버튼 ===== */
+.hamburger {
+  display: none;
   font-size: 24px;
   background: none;
   border: none;
@@ -120,7 +139,7 @@
   cursor: pointer;
 }
 
-/* 반응형 설정 */
+/* ===== 반응형 ===== */
 @media (max-width: 768px) {
   .search-bar-wrapper {
     width: 100vw;
@@ -152,17 +171,7 @@
   }
 }
 
-/* 기본 숨김 처리 */
-.hamburger {
-  display: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 16px;
-}
-
-/* 모바일 화면에서는 햄버거만 보이도록 조정 */
+/* 모바일 초소형 화면 */
 @media (max-width: 350px) {
   .hamburger {
     display: block;
@@ -183,13 +192,9 @@
     border-radius: 8px;
     z-index: 1000;
   }
-
-  .nav-links.open .banner {
-    display: block;
-  }
 }
 
-/* 데스크탑에서는 햄버거 안보이게, nav-links는 그대로 표시 */
+/* 데스크탑 */
 @media (min-width: 351px) {
   .hamburger {
     display: none;
@@ -201,6 +206,7 @@
   }
 }
 
+/* ===== TOP 버튼 ===== */
 .top-button {
   position: fixed;
   bottom: 40px;
