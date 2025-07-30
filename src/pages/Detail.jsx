@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
 import { fetchGenres, fetchMovieById } from "../api/tmbi";
 import { useMovieStore } from "../store/movie_store.js";
+import { Theme } from "../GlobalStyle.js";
 
 export default function Detail() {
   const { getMovieById, genreMap } = useMovieStore();
@@ -167,7 +168,7 @@ const DetailStyled = styled.div`
   display: flex;
   width: 100%;
   height: 49rem;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${Theme("background")};
   padding: 1rem 3rem;
   gap: 2rem;
 
@@ -205,9 +206,9 @@ const DetailStyled = styled.div`
     .genre {
       font-size: 1.5rem;
       cursor: pointer;
-      background-color: ${({ theme }) => theme.cardBG};
+      background-color: ${Theme("cardBG")};
       &:hover {
-        background-color: ${({ theme }) => theme.cardBGHover};
+        background-color: ${Theme("cardBGHover")};
       }
       margin-right: 1rem;
       width: fit-content;

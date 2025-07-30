@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import Layout from "./components/Layout";
 import { useMovieStore } from "./store/movie_store.js";
@@ -7,6 +7,9 @@ import { ThemeProvider } from "styled-components";
 import { useThemeStore } from "./store/theme_store.js";
 import { GlobalSyle } from "./GlobalStyle.js";
 import Skeleton from "./components/skeletonUI.jsx";
+import LoginModal from "./components/LogInModal.jsx";
+import AuthCallback from "./pages/AuthCallback.jsx";
+// import SignUp from "./pages/SignUp.jsx";
 
 const Main = lazy(() =>
   import("./pages/Main.jsx").then((module) => ({ default: module.Main }))
@@ -14,9 +17,11 @@ const Main = lazy(() =>
 const Detail = lazy(() => import("./pages/Detail.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
 
-
 function App() {
   const { fetchInitialMovies, fetchInitialGenres } = useMovieStore();
+
+  const location = useLocation();
+  const state = location.state && location.state.backgroundLocation;
 
   // isDark 상태 변수가 쓰이지는 않았으나 리랜더링을 위해 구독함
   const isDark = useThemeStore((state) => state.isDark);
@@ -64,15 +69,25 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalSyle></GlobalSyle>
-      <Suspense fallback={<Skeleton/>}>
-        <Routes>
-          <Route element={<Layout></Layout>}>
-            <Route path="/" element={<Main></Main>}></Route>
-            <Route path="/detail/:movieId" element={<Detail></Detail>}></Route>
-            <Route path="/search/:query" element={<Search></Search>}></Route>
+      <Suspense fallback={<Skeleton />}>
+        <Routes location={state || location}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Main />}></Route>
+            <Route path="/detail/:movieId" element={<Detail />}></Route>
+            <Route path="/search/:query" element={<Search />}></Route>
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/userInfo" element={<UserInfoModal />} />
+            {/* <Route path="/login" element={<LogIn />}></Route> */}
+            {/* <Route path="/signup" element={<SignUp />}></Route> */}
             {/* <Route path="/favorite" element={<Favorite></Favorite>}></Route> */}
           </Route>
         </Routes>
+        {state && (
+          <Routes>
+            <Route path="/login" element={<LoginModal />} />
+            <Route path="/signup" element={<LoginModal />} />
+          </Routes>
+        )}
       </Suspense>
     </ThemeProvider>
   );
