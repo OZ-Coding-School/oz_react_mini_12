@@ -1,70 +1,85 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Slider from "react-slick"; //설치한 슬라이더 라이브러리의 컴포넌트
+import Slider from "react-slick";
 import MovieCard from "./components/MovieCard";
-import "./styles/App.css"; //css 경로 지정
+import "./styles/App.css";
 
-/*슬리이더를 위한 기본 및 테마 css 불러오기*/
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const sliderRef = useRef(null); // 슬라이더 ref
 
-  //추가: 영화 API 요청 및 성인 영화 필터링
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const apiKey = import.meta.env.VITE_TMDB_API_KEY; //환경변수에서 키 받아오기
-      const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=1`;
+  // 영화 데이터를 불러오는 함수
+  const fetchMovies = async (currentPage) => {
+    const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=${currentPage}`;
 
-      try {
-        const response = await fetch(url); //api 요청
-        const data = await response.json(); //json 응답 처리
+    try {
+      setIsFetching(true);
+      const response = await fetch(url);
+      const data = await response.json();
 
-        //성인 영화(adult: true) 제외
-        const filtered = data.results.filter((movie) => movie.adult === false);
-        setMovies(filtered);
-      } catch (error) {
-        console.error("Error fetching movie data:", error);
+      const filtered = data.results.filter((movie) => movie.adult === false);
+
+      if (filtered.length === 0) {
+        setHasMore(false);
+      } else {
+        setMovies((prev) => [...prev, ...filtered]);
       }
-    };
+    } catch (error) {
+      console.error("영화 로딩 오류:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
-    fetchMovies();
-  }, []);
+  useEffect(() => {
+    fetchMovies(page);
+  }, [page]);
 
-  //슬라이더 객체 설정
+  // 슬라이더가 끝에 도달하면 다음 페이지 로딩
+  const handleAfterChange = (currentIndex) => {
+    const totalSlides = movies.length;
+    if (hasMore && !isFetching && currentIndex >= totalSlides - 4) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  // 맨 앞으로 이동하는 함수
+  const handleGoToStart = () => {
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(0); // 0번째 슬라이드로 이동
+    }
+  };
+
+  // 슬라이더 설정
   const settings = {
-    dots: true, //하단에 점
-    infinite: true, //무한 루프
-    speed: 500, //전환 속도
-    slidesToShow: 4, //기본 표시 갯수
-    slidesToScroll: 1, //한번에 넘어가는 슬라이드 갯수
-
-    /*반응형 화면 너비 설정*/
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    afterChange: handleAfterChange,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 3 },
-      },
-      {
-        breakpoint: 768,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 480,
-        settings: { slidesToShow: 1 },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
   return (
     <div className="app-container">
       <h1 className="app-title">영화 리스트</h1>
-      {/*슬라이드 적용 부분*/}
-      <Slider {...settings} className="movie-slider">
+
+      {/* 슬라이더 */}
+      <Slider ref={sliderRef} {...settings} className="movie-slider">
         {movies.map((movie) => (
           <div key={movie.id} className="movie-slide">
-            {/* 각 영화 카드를 클릭하면 해당 영화의 상세 페이지로 이동 */}
             <Link to={`/details/${movie.id}`} className="movie-link">
               <MovieCard
                 title={movie.title}
@@ -75,6 +90,18 @@ function App() {
           </div>
         ))}
       </Slider>
+
+      {/* 맨 앞으로 이동 버튼 */}
+      <button className="go-to-start-btn" onClick={handleGoToStart}>
+        맨 앞으로 이동
+      </button>
+
+      {/* 더 이상 영화가 없을 때 메시지 */}
+      {!hasMore && (
+        <p style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
+          더 이상 영화가 없습니다.
+        </p>
+      )}
     </div>
   );
 }

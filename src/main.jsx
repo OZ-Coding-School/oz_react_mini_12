@@ -9,6 +9,7 @@ import SearchPage from "./pages/SearchPage"; //검색 결과 페이지
 import SignupPage from "./pages/SignupPage"; //회원가입 페이지
 import LoginPage from "./pages/LoginPage"; //로그인 페이지
 import AuthStatus from "./components/AuthStatus"; //알림 및 전체 설정 컴포넌트
+import MyPage from "./pages/MyPage"; //마이 페이지
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   /*라우팅 기능을 활성화*/
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="details/:id" element={<MovieDetail />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Route>
     </Routes>
   </BrowserRouter>

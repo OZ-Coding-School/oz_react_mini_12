@@ -56,6 +56,23 @@
   line-height: 1.6;
 }
 
+/* 찜 버튼 css */
+.favorite-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: crimson;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.favorite-btn:hover {
+  background-color: darkred;
+}
+
 /* === 반응형 스타일 === */
 
 /* 모바일 (최대 480px) */
