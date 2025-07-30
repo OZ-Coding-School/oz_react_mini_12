@@ -1,0 +1,96 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: #343333ff;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 380px;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-form input {
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.login-form button {
+  padding: 14px 16px;
+  background-color: #7918ceff;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #5d0fa2ff;
+}
+
+.signup-redirect {
+  margin-top: 20px; /* 로그인 버튼과 간격 */
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.signup-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: #7918ceff;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+  color: #5d0fa2ff;
+}
+
+.signup-redirect p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.signup-redirect {
+  user-select: none; /* 텍스트 드래그 방지 */
+}
+
+.signup-link {
+  /* 기존 스타일 유지하면서 약간 밑줄 추가 */
+  text-decoration: underline;
+}
+
+/* 모바일/작은 화면에서 약간 더 보기 좋게 */
+@media (max-width: 480px) {
+  .login-form {
+    width: 90%;
+    padding: 24px;
+  }
+}
+
+.login-message {
+  color: #5d0fa2ff;
+  margin-top: 8px;
+  font-size: 14px;
+}

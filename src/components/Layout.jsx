@@ -1,54 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import './Layout.css';
-import './SearchResults';
-import useDebounce from '../hooks/useDebounce'; // 디바운스 훅 import
+import useDebounce from '../hooks/useDebounce';
+import { useSupabaseAuth, logout } from '../hooks/supabaseSetting';
 
-const linkStyle = {
-  color: 'white',
-  textDecoration: 'none',
-  fontSize: '16px',
-};
+const linkStyle = { color: 'white', textDecoration: 'none', fontSize: '16px' };
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showTopButton, setShowTopButton] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const menuRef = useRef(null);
   const navigate = useNavigate();
 
-  const debouncedSearchQuery = useDebounce(searchQuery, 3000); // 3초 디바운스 적용
+  const { user, setUser } = useSupabaseAuth();
+  const debouncedSearchQuery = useDebounce(searchQuery, 3000);
 
-  // 3초간 입력 멈추면 자동으로 SearchResults로 이동
+  // 검색 및 스크롤 관리
   useEffect(() => {
-    if (debouncedSearchQuery.trim() !== '') {
+    const handleScroll = () => setShowTopButton(window.scrollY > 300);
+
+    window.addEventListener('scroll', handleScroll);
+    setSearchQuery(''); // 새로고침 시 검색어 초기화
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 디바운스 검색어 변경 시 검색 페이지로 이동
+  useEffect(() => {
+    if (debouncedSearchQuery.trim()) {
       navigate(`/search?query=${encodeURIComponent(debouncedSearchQuery)}`);
     }
   }, [debouncedSearchQuery, navigate]);
 
-  // 스크롤 이벤트 핸들러
+  // 프로필 메뉴 외부 클릭 시 닫기
   useEffect(() => {
-    const handleScroll = () => {
-      setShowTopButton(window.scrollY > 300);
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setProfileMenuOpen(false);
+      }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 새로고침 시 검색어 초기화
-  useEffect(() => {
-    setSearchQuery('');
-  }, []);
-
-  // 수동 검색 처리 (엔터나 버튼 클릭)
-  const handleSearch = () => {
-    if (searchQuery.trim() !== '') {
+  const handleSearch = useCallback(() => {
+    if (searchQuery.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
-  };
+  }, [searchQuery, navigate]);
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+    setUser(null);
+    navigate('/');
+  }, [navigate, setUser]);
 
   return (
     <div className="layout-container">
@@ -59,17 +70,33 @@ export default function Layout() {
               우미관
             </Link>
           </div>
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            ☰
-          </button>
+          <button className="hamburger" onClick={() => setMenuOpen((prev) => !prev)}>☰</button>
 
           <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
-            <Link to="/" style={linkStyle} className="banner"></Link>
-            <Link to="/login" style={linkStyle} className="banner">로그인</Link>
-            <Link to="/contact" style={linkStyle} className="banner">회원가입</Link>
+            <Link to="/" style={linkStyle} className="banner" />
+
+            {!user ? (
+              <>
+                <Link to="/login" style={linkStyle} className="banner">로그인</Link>
+                <Link to="/signup" style={linkStyle} className="banner">회원가입</Link>
+              </>
+            ) : (
+              <div className="profile-container" ref={menuRef}>
+                <div className="profile-trigger" onClick={() => setProfileMenuOpen((prev) => !prev)}>
+                  <span>👤 {user.email}</span>
+                  <span>{profileMenuOpen ? '▲' : '▼'}</span>
+                </div>
+
+                {profileMenuOpen && (
+                  <div className="profile-menu">
+                    <Link to="/mypage" onClick={() => setProfileMenuOpen(false)}>마이페이지</Link>
+                    <button onClick={() => { setProfileMenuOpen(false); handleLogout(); }}>로그아웃</button>
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
 
-          {/* 검색바 */}
           <div className="search-bar-wrapper">
             <input
               type="text"
@@ -88,11 +115,8 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* TOP 버튼 */}
       {showTopButton && (
-        <button className="top-button" onClick={scrollToTop}>
-          TOP
-        </button>
+        <button className="top-button" onClick={scrollToTop}>TOP</button>
       )}
     </div>
   );
