@@ -1,22 +1,16 @@
-/* App.css */
-
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
 }
 
 .layout-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; 
 }
 
 .content {
   flex: 1;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
-
-

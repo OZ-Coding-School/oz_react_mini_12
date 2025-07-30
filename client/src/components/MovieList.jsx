@@ -3,7 +3,13 @@ import MovieCard from "./MovieCard";
 import "./MovieList.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const MovieList = ({ fetchUrl, title, showRank, itemsPerPage = 4, rows = 1 }) => {
+const MovieList = ({
+  fetchUrl,
+  title,
+  showRank,
+  itemsPerPage = 4,
+  rows = 1,
+}) => {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const API_TOKEN = import.meta.env.VITE_TMDB_API_TOKEN;
@@ -39,7 +45,6 @@ const MovieList = ({ fetchUrl, title, showRank, itemsPerPage = 4, rows = 1 }) =>
   };
 
   const dotCount = Math.ceil(movies.length / itemsPerPage);
-
 
   return (
     <div className={`movie-list-container${title === "🎬 인기 영화" ? " popular" : ""}`}>

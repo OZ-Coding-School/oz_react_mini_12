@@ -1,4 +1,3 @@
-// src/pages/SearchResult.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
@@ -10,8 +9,17 @@ function SearchResult() {
   const location = useLocation();
   const query = new URLSearchParams(location.search).get("q");
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // 쿼리 없으면 검색 안 함
+    if (!query || query.trim() === "") {
+      setMovies([]);
+      return;
+    }
+
+    setLoading(true);
+
     const fetchSearchedMovies = async () => {
       try {
         const res = await fetch(
@@ -26,22 +34,32 @@ function SearchResult() {
         const data = await res.json();
         const filtered = data.results.filter((movie) => !movie.adult);
         setMovies(filtered);
-        setMovies(filtered);
       } catch (err) {
+        setMovies([]);
         console.error("검색 실패 😢", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (query) {
-      fetchSearchedMovies();
-    }
-  }, [query]);
+    fetchSearchedMovies();
+  }, [query, location.search]);
+
+  if (!query || query.trim() === "") {
+    return (
+      <div className="search-result">
+        <h2 style={{ color: "white" }}>검색어를 입력해 주세요.</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="search-result">
       <h2 style={{ color: "white" }}>🔍 검색 결과: "{query}"</h2>
       <div className="result-list">
-        {movies.length > 0 ? (
+        {loading ? (
+          <p style={{ color: "white" }}>검색 중...</p>
+        ) : movies.length > 0 ? (
           movies.map((movie) => (
             <MovieCard
               key={movie.id}
