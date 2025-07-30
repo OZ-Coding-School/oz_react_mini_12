@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; //영화 ID를 URL에서 추출
-import "../styles/MovieDetail.css"; //css 경로 지정
+import { useParams } from "react-router-dom";
+import "../styles/MovieDetail.css";
 
 function MovieDetail() {
-  const { id } = useParams(); //URL에서 영화 ID 추출
-  const [movie, setMovie] = useState(null); //영화 상세 정보 상태
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+  const [isFavorite, setIsFavorite] = useState(false); // 찜 여부 상태
 
-  /*컴포넌트 마운트 시 API 호출*/
   useEffect(() => {
     const fetchMovieDetail = async () => {
       const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -16,25 +16,43 @@ function MovieDetail() {
       const response = await fetch(url);
       const data = await response.json();
       setMovie(data);
+
+      // localStorage에 있는 찜 목록 확인
+      const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      const exists = favorites.some((fav) => fav.id === data.id);
+      setIsFavorite(exists);
     };
 
     fetchMovieDetail();
   }, [id]);
 
-  if (!movie) return null;  //영화 데이터가 없을 경우 아무것도 렌더링하지 않음
+  // 찜 토글 함수
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (isFavorite) {
+      // 찜 해제
+      const updated = favorites.filter((fav) => fav.id !== movie.id);
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      setIsFavorite(false);
+    } else {
+      // 찜 추가
+      const updated = [...favorites, movie];
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      setIsFavorite(true);
+    }
+  };
+
+  if (!movie) return null;
 
   return (
-    /* 영화 상세 페이지 전체 컨테이너 */
     <div className="detail-container">
-
-      {/* 영화 포스터 이미지 부분 */}
       <img
         src={`${imageBaseUrl}${movie.poster_path}`}
         alt={movie.title}
-        className="detail-poster" //css 스타일 지정
+        className="detail-poster"
       />
 
-      {/* 정보, 평점, 제목, 장르 등의 세부 내용 표시 부분 */}
       <div className="detail-info">
         <div className="detail-top">
           <h1>{movie.title}</h1>
@@ -44,6 +62,11 @@ function MovieDetail() {
         <div className="overview-section">
           <p><strong>줄거리:</strong> {movie.overview}</p>
         </div>
+
+        {/* 찜 버튼 추가 */}
+        <button className="favorite-btn" onClick={toggleFavorite}>
+          {isFavorite ? "💔 찜 취소" : "❤️ 찜 추가"}
+        </button>
       </div>
     </div>
   );

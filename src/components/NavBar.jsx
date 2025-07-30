@@ -48,7 +48,7 @@ function NavBar() {
   // 'Movie App' 클릭 시 홈으로 이동 + 검색어 초기화
   const handleTitleClick = (e) => {
     e.preventDefault();
-    setQuery(""); // 검색창 초기화
+    setQuery("");
     window.location.href = "/";
   };
 
@@ -79,6 +79,9 @@ function NavBar() {
             {user ? (
               <>
                 <div className="profile-email">{user.email}</div>
+                <Link to="/mypage" className="dropdown-btn" onClick={() => setMenuOpen(false)}>
+                  마이페이지
+                </Link>
                 <LogoutButton />
               </>
             ) : (

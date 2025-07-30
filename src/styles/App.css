@@ -50,6 +50,23 @@ body {
   display: block;
 }
 
+.go-to-start-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 10px 20px;
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.go-to-start-btn:hover {
+  background-color: #e03d3d;
+}
+
 /* === 반응형 추가 === */
 
 /* 슬라이더의 영화 카드가 너무 작아지지 않도록 최소 너비 지정 */

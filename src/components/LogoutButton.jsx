@@ -17,14 +17,7 @@ function LogoutButton() {
   };
 
   return (
-    <button onClick={handleLogout} style={{
-      padding: "8px 16px",
-      borderRadius: "6px",
-      backgroundColor: "#555",
-      color: "white",
-      border: "none",
-      cursor: "pointer"
-    }}>
+    <button onClick={handleLogout} className="dropdown-btn">
       로그아웃
     </button>
   );
