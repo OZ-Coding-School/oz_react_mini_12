@@ -24,6 +24,25 @@ export const fetchPopularMovies = async () => {
   }
 };
 
+export const searchMovies = async (query) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/search/movie`, {
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${API_KEY}`
+      },
+      params: {
+        query: query,
+        language: 'ko-KR'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error searching movies for query "${query}":`, error);
+    throw error;
+  }
+};
+
 export const fetchMovieDetail = async (movieId) => {
   try {
     const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {

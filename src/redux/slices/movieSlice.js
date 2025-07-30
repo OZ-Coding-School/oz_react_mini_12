@@ -1,11 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchPopularMovies } from '../../api/movieApi';
+import { fetchPopularMovies, searchMovies } from '../../api/movieApi';
 
 export const fetchMovies = createAsyncThunk(
   'movies/fetchMovies',
-  async (_, { rejectWithValue }) => {
+  async (searchKeyword, { rejectWithValue }) => {
     try {
-      const data = await fetchPopularMovies();
+      let data;
+      if (searchKeyword) {
+        data = await searchMovies(searchKeyword);
+      } else {
+        data = await fetchPopularMovies();
+      }
+
       const filteredMovies = data.results.filter(movie => !movie.adult);
       return filteredMovies;
     } catch (error) {
