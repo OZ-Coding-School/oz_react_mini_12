@@ -1,54 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { FiSearch } from 'react-icons/fi';
-import { Link, useNavigate } from 'react-router-dom';
-import SignupModal from './SignupModal';
-import LoginModal from './LoginModal';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/zustand';
-import ThemeToggle from './ThemeToggle';
-import { useTheme } from '../context/ThemeContext';
+import { supabase } from '../../supabaseClient';
+import LogoSection from './LogoSection';
+import SearchBar from './SearchBar';
+import UserMenu from './UserMenu';
+import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
 import useDebounce from '../hooks/useDebounce';
+import { useTheme } from '../context/ThemeContext';
 
 function NavBar() {
   const navigate = useNavigate();
-  const { user, isLoggedIn, logout } = useAuthStore();
+  const { user, isLoggedIn, logout, login } = useAuthStore();
   const [search, setSearch] = useState('');
   const [searchType, setSearchType] = useState('title');
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const { theme } = useTheme();
 
+  const [isUserMenuOpenMobile, setIsUserMenuOpenMobile] = useState(false);
+  const [isUserMenuOpenDesktop, setIsUserMenuOpenDesktop] = useState(false);
+
+  const userMenuRefMobile = useRef(null);
+  const dropdownRefMobile = useRef(null);
+  const userMenuRefDesktop = useRef(null);
+  const dropdownRefDesktop = useRef(null);
   const debounceSearch = useDebounce(search, 500);
 
-  // 디바운스 완료 후 URL 변경하기
-  useEffect(() => {
-    if (debounceSearch.trim() === '') return;
-
-    navigate(
-      `/search?query=${encodeURIComponent(
-        debounceSearch.trim()
-      )}&type=${searchType}`,
-      { replace: true } // history를 누적시키지 않음
-    );
-
-    // 검색창 초기화 (엔터처럼 UX 통일)
-    setSearch('');
-  }, [debounceSearch, searchType, navigate]);
-
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
-  };
-
-  // 폼 제출 시 즉시 탐색(엔터, 버튼 클릭)
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(
-        `/search?query=${encodeURIComponent(search.trim())}&type=${searchType}`
-      );
-      setSearch('');
-    }
-  };
-
+  // 다크/라이트 모드 클래스
+  const { theme } = useTheme();     // 앗.. 헷가리다니
   const navBgClass =
     theme === 'light' ? 'bg-white text-black' : 'bg-black text-white';
   const inputBgClass =
@@ -60,136 +40,161 @@ function NavBar() {
       ? 'bg-gray-300 text-black hover:bg-gray-400'
       : 'bg-gray-600 text-white hover:bg-gray-700';
 
+  // 로그인 상태 유저 정보 불러오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { user_metadata } = user;
+
+        login({
+          id: user.id,
+          name: user_metadata?.name || user_metadata?.full_name || '사용자',
+          email: user.email,
+          avatar_url: user_metadata?.avatar_url || user_metadata?.picture || '',  // sns 썸네일 갖고오기
+        });
+      }
+    };
+
+    fetchUserInfo();
+  }, [login]);
+
+  // 검색어 변경에 따른 네비게이션
+  useEffect(() => {
+    if (debounceSearch.trim() === '') return;
+
+    navigate(
+      `/search?query=${encodeURIComponent(
+        debounceSearch.trim()
+      )}&type=${searchType}`,
+      { replace: true }
+    );
+
+    setSearch('');
+  }, [debounceSearch, searchType, navigate]);
+
+  // 외부 클릭 감지 (모바일)
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        userMenuRefMobile.current &&
+        !userMenuRefMobile.current.contains(event.target) &&
+        dropdownRefMobile.current &&
+        !dropdownRefMobile.current.contains(event.target)
+      ) {
+        setIsUserMenuOpenMobile(false);
+      }
+    }
+
+    if (isUserMenuOpenMobile) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isUserMenuOpenMobile]);
+
+  // 외부 클릭 감지 (데스크탑)
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        userMenuRefDesktop.current &&
+        !userMenuRefDesktop.current.contains(event.target) &&
+        dropdownRefDesktop.current &&
+        !dropdownRefDesktop.current.contains(event.target)
+      ) {
+        setIsUserMenuOpenDesktop(false);
+      }
+    }
+
+    if (isUserMenuOpenDesktop) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isUserMenuOpenDesktop]);
+
+  // 검색어 변경 핸들러
+  const handleSearchChange = (e) => setSearch(e.target.value);
+
+  // 검색 폼 제출 핸들러
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(
+        `/search?query=${encodeURIComponent(search.trim())}&type=${searchType}`
+      );
+      setSearch('');
+    }
+  };
+
   return (
     <nav
       className={`${navBgClass} px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-0`}
     >
-      {/* 로고 */}
-      <div className="flex-shrink-0 flex items-center justify-between w-full sm:w-auto">
-        <Link to="/">
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold cursor-pointer select-none
-                      bg-gradient-to-r from-red-500 via-yellow-400 to-pink-500
-                      bg-clip-text text-transparent"
-          >
-            OZFlix
-          </h1>
-        </Link>
+      <LogoSection
+        isLoggedIn={isLoggedIn}
+        user={user}
+        onLogout={logout}
+        onUserMenuToggle={() => setIsUserMenuOpenMobile((prev) => !prev)}
+        isUserMenuOpenMobile={isUserMenuOpenMobile}
+        userMenuRefMobile={userMenuRefMobile}
+        dropdownRefMobile={dropdownRefMobile}
+      />
 
-        {/* 모바일 전용: 로그인/회원가입 버튼 + 토글 버튼 옆 배치 */}
-        <div className="sm:hidden flex gap-2 items-center">
-          {isLoggedIn ? (
-            <>
-              <button
-                onClick={logout}
-                className={`${buttonBgClass} px-4 py-2 text-sm rounded-md`}
-              >
-                로그아웃
-              </button>
-              <ThemeToggle />
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setIsSignupOpen(true)}
-                className={`${buttonBgClass} px-4 py-2 rounded-md text-sm font-semibold`}
-              >
-                회원가입
-              </button>
-              <button
-                onClick={() => setIsLoginOpen(true)}
-                className={`${buttonBgClass} px-4 py-2 rounded-md text-sm`}
-              >
-                로그인
-              </button>
-              <ThemeToggle />
-            </>
-          )}
-        </div>
-      </div>
+      <SearchBar
+        search={search}
+        onSearchChange={handleSearchChange}
+        onSearchSubmit={handleSearchSubmit}
+        searchType={searchType}
+        onSearchTypeChange={(e) => setSearchType(e.target.value)}
+        inputBgClass={inputBgClass}
+        selectBgClass={selectBgClass}
+      />
 
-      {/* 검색창 */}
-      <form
-        onSubmit={handleSearchSubmit}
-        className="w-full sm:flex-grow sm:mx-6"
-      >
-        <div
-          className="
-            relative flex 
-            flex-col-reverse sm:flex-row 
-            items-stretch sm:items-center 
-            space-y-4 sm:space-y-0 sm:space-x-3
-            sm:gap-0.5
-            max-w-full sm:max-w-4xl 
-            mx-auto"
-        >
-          {/* 검색 입력 */}
-          <div className="relative flex-grow mb-0">
-            <FiSearch
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={20}
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={handleSearchChange}
-              placeholder={
-                searchType === 'title'
-                  ? '영화명을 입력하세요.'
-                  : '출연 배우를 입력하세요.'
-              }
-              className={`w-full pl-10 pr-4 py-2 text-base sm:text-xl rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${inputBgClass}`}
-            />
-          </div>
+      <UserMenu
+        isLoggedIn={isLoggedIn}
+        user={user}
+        onLogout={logout}
+        isUserMenuOpenDesktop={isUserMenuOpenDesktop}
+        setIsUserMenuOpenDesktop={setIsUserMenuOpenDesktop}
+        userMenuRefDesktop={userMenuRefDesktop}
+        dropdownRefDesktop={dropdownRefDesktop}
+        buttonBgClass={buttonBgClass}
+        onLoginClick={() => setIsLoginOpen(true)}
+        onSignupClick={() => setIsSignupOpen(true)}
+      />
 
-          {/* 셀렉트박스 */}
-          <select
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-            className={`py-2 sm:py-3 px-3 rounded-md text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-red-500 mt-0 sm:mt-auto ${selectBgClass}`}
-          >
-            <option value="title">영화 제목</option>
-            <option value="actor">출연 배우</option>
-          </select>
-        </div>
-      </form>
-
-      {/* 데스크탑 이상 로그인/회원가입 + 토글 */}
-      <div className="hidden sm:flex-shrink-0 sm:flex gap-4 items-center">
-        {isLoggedIn ? (
-          <>
-            <span className="text-xl font-semibold">
-              {user?.email}님 환영합니다
-            </span>
-            <button
-              onClick={logout}
-              className={`${buttonBgClass} px-6 py-3 text-lg rounded-md`}
-            >
-              로그아웃
-            </button>
-            <ThemeToggle />
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => setIsSignupOpen(true)}
-              className={`${buttonBgClass} bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg text-white text-[18px] font-semibold cursor-pointer`}
-            >
-              회원가입
-            </button>
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className={`${buttonBgClass} px-6 py-3 text-lg rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer`}
-            >
-              로그인
-            </button>
-            <ThemeToggle />
-          </>
-        )}
-      </div>
-
-      {isSignupOpen && <SignupModal onClose={() => setIsSignupOpen(false)} />}
-      {isLoginOpen && <LoginModal onClose={() => setIsLoginOpen(false)} />}
+     
+      {/* 모달 -> login 및 signup모달에 props 내려주기*/}
+      {isSignupOpen && (
+        <SignupModal
+          onClose={() => setIsSignupOpen(false)}
+          openLogin={() => {
+            setIsLoginOpen(true);
+            setIsSignupOpen(false);
+          }}
+        />
+      )}
+      {isLoginOpen && (
+        <LoginModal
+          onClose={() => setIsLoginOpen(false)}
+          openSignup={() => {
+            setIsSignupOpen(true);
+            setIsLoginOpen(false);
+          }}
+        />
+      )}
     </nav>
   );
 }
