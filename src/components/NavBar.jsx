@@ -20,22 +20,22 @@ function NavBar() {
   };
 
   return (
-    <header className="bg-gray-800 text-white p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-200">
+    <header className="bg-black text-white p-4 shadow-lg">
+      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <Link to="/" className="text-4xl font-extrabold text-red-600 hover:text-red-700 transition-colors duration-300 tracking-tighter">
           영화 도감
         </Link>
-        <form onSubmit={handleSearchSubmit} className="flex items-center space-x-2">
+        <form onSubmit={handleSearchSubmit} className="flex items-center space-x-2 w-full sm:w-auto">
           <input
             type="text"
             placeholder="영화 검색..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="px-4 py-2 rounded-lg border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-48 sm:w-64"
+            className="flex-grow px-4 py-2 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition duration-200 text-base sm:text-lg"
           />
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200"
+            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md shadow-md transition duration-200 text-base sm:text-lg font-semibold transform hover:scale-105"
           >
             검색
           </button>
