@@ -17,4 +17,4 @@ export async function fetchPopularMovies() {
     const data = await res.json();
     return data.results.filter(movie =>
         movie.adult === false);
-}
+}  

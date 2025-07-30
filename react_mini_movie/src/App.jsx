@@ -4,6 +4,9 @@ import Layout from '../components/Layout';
 import MovieDetail from '../components/MovieDetail';
 import Home from '../pages/Home';
 
+const accessToken =
+import.meta.env.VITE_TMDB_ACCESS_TOKEN;
+
 export default function App() {
 return (
   <Routes>

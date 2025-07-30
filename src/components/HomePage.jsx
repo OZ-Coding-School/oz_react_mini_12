@@ -1,13 +1,18 @@
 // import data from '../assets/data/movieListData.json';
 import { MovieCard } from './MovieCard';
 
-function HomePage({movies}) {
+function HomePage({movies,loading,setLoading}) {
 
     
     return (
         <>
         <div className='movie-list'>
-        {movies.map((movie) => (
+        {loading ? (
+            <p>검색중입니다...</p>
+        ) :
+        movies.length === 0 ? (
+            <p>검색 결과가 없습니다</p>
+        ): movies.map((movie) => (
 
             <MovieCard
         key={movie.id}
@@ -17,6 +22,7 @@ function HomePage({movies}) {
         rating={movie.vote_average}/>
         )
     )}
+
     </div>
         </>
     )
