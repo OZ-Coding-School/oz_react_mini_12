@@ -26,7 +26,7 @@ function Navigator() {
   return (
     <NavigatorContainer>
       <NavigatorLogo onClick={() => navigate("/")}>
-        <span className="logo-text">Movibrary</span>
+        ⬤ <span className="logo-text">Movibrary</span>
       </NavigatorLogo>
       <SearchInput />
       <NavLinksContainer>
@@ -34,7 +34,7 @@ function Navigator() {
           <span>Loading...</span>
         ) : user ? (
           <UserActions>
-            <span>{user.userName || user.email}</span>
+            <Link to="/profile">Hi! {user.userName}</Link>
             <button onClick={handleLogout}>Logout</button>
           </UserActions>
         ) : (

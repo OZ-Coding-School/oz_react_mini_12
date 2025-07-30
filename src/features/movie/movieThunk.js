@@ -3,9 +3,9 @@ import { popularMovies } from "../../api/movieList";
 
 export const fetchPopularMovie = createAsyncThunk(
   "movie/fetchPopularMovie",
-  async (_, { rejectWithValue }) => {
+  async (page, { rejectWithValue }) => {
     try {
-      const response = await popularMovies();
+      const response = await popularMovies(page);
       const nonAdultPopularMovies = response.results.filter(
         (movie) => movie.adult === false
       );

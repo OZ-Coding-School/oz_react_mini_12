@@ -13,7 +13,7 @@ import { useSupabaseAuth } from "../supabase";
 const validate = ({ userName, email, password, passwordConfirm }) => {
   const errors = {};
 
-  if (!/^[a-zA-Z]$/.test(userName)) {
+  if (!/^[a-zA-Z]{2,20}$/.test(userName)) {
     errors.userName = "2-20 characters long and contain only English letters";
   }
 

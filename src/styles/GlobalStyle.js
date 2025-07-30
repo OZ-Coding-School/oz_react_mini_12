@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
   #root {
     max-width: 1280px;
+    min-width: 465px;
     margin: 0 auto;
     padding-top: 70px;
     text-align: center;

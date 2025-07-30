@@ -7,9 +7,9 @@ const options = {
   },
 };
 
-export const popularMovies = async () =>
+export const popularMovies = async (pageNum) =>
   await fetch(
-    "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=created_at.asc",
+    `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${pageNum}&sort_by=created_at.asc`,
     options
   )
     .then((res) => res.json())

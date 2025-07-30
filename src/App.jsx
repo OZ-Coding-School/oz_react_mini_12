@@ -12,7 +12,7 @@ const MovieDetail = lazy(() => import("./pages/MovieDetail"));
 const Search = lazy(() => import("./pages/Search"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
-const Profile = lazy(() => import("./components/Profile"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +41,9 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Route>
     </Routes>
   );

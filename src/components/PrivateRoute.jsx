@@ -1,9 +1,8 @@
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useSupabaseAuth } from "../supabase";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = () => {
-  const { user, loading } = useSupabaseAuth();
+  const { user, loading } = useSelector((state) => state.user);
 
   if (loading) {
     return <div>Loading...</div>;

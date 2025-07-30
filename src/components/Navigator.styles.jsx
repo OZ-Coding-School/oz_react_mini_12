@@ -20,7 +20,7 @@ export const NavigatorLogo = styled.span`
   font-weight: 800;
   transform: translate(0, -3px);
 
-  @media (max-width: 835px) {
+  @media (max-width: 855px) {
     .logo-text {
       display: none;
     }
@@ -44,9 +44,10 @@ export const NavLinksContainer = styled.div`
 export const UserActions = styled.div`
   display: flex;
   align-items: center;
-  span {
+  a {
     margin-right: 1rem;
     font-weight: bold;
+    color: black;
   }
   button {
     background-color: #d61f3d;
