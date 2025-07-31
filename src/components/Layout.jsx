@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import './Layout.css';
 import useDebounce from '../hooks/useDebounce';
 import { useSupabaseAuth, logout } from '../hooks/supabaseSetting';
@@ -13,9 +13,17 @@ export default function Layout() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user, setUser } = useSupabaseAuth();
   const debouncedSearchQuery = useDebounce(searchQuery, 3000);
+
+  // ✅ 로그인 상태에서 로그인/회원가입 페이지 접근 시 차단
+  useEffect(() => {
+    if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
+      navigate('/', { replace: true }); // 뒤로가기도 차단
+    }
+  }, [user, location.pathname, navigate]);
 
   // 검색 및 스크롤 관리
   useEffect(() => {
