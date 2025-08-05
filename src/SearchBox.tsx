@@ -1,19 +1,44 @@
 import { Box } from '@mui/material'
-import React, { useState } from 'react'
-import { useSearchParams } from 'react-router'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { colorStyle } from './_constants/colorConstants'
+import { useSearchText } from './_hooks/hooks'
 import MagnifyingGlassIcon from './components/MagnifyingGlassIcon'
 
-interface SearchBoxProps {
-  text: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => void
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
-}
-
-const SearchBox = ({ text, onChange, onBlur, onKeyDown }: SearchBoxProps) => {
+const SearchBox = () => {
+  const inputRef = useRef<HTMLInputElement>(null)
   const [searchParams, _setSearchParams] = useSearchParams()
+  const { text, setText, setSearchParamsNow } = useSearchText()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handelChange = (event: React.ChangeEvent<HTMLInputElement>) => setText(event.target.value)
+  
+  const handleBlur = () => {
+    setSearchParamsNow()
+    if (location.pathname === "/") { return }
+    navigate(`/?title=${text}`)
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") { return }
+    setSearchParamsNow()
+    if (location.pathname === "/") { return }
+    navigate(`/?title=${text}`)
+  }
+
   const [isFocused, setIsFocused] = useState<boolean>(false)
+
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setText("")
+
+      if (inputRef && inputRef.current) {
+        inputRef.current.value = ""
+      }
+    }
+  }, [location.pathname])
 
   const containerBaseStyle = `ml-auto flex transition border-1 outline-0 rounded-xl ${colorStyle.bgBack}`
   const containerFocuseStyle = isFocused ? colorStyle.borderVivid : colorStyle.borderMuted
@@ -32,21 +57,26 @@ const SearchBox = ({ text, onChange, onBlur, onKeyDown }: SearchBoxProps) => {
 
   return (
     <Box className={containerStyle}>
+
       <input
+        ref={inputRef}
         type="text"
         defaultValue={searchParams.get("title") ?? ""}
-        onChange={onChange}
-        onBlur={(event) => {
-          onBlur(event)
+        onChange={handelChange}
+        onBlur={() => {
+          handleBlur()
           setIsFocused(false)
         }}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         style={{ transitionProperty: "width" }}
-        className={inputStyle} />
+        className={inputStyle}
+      />
+
       <Box onMouseDown={handleIconClick} className="p-3">
         <MagnifyingGlassIcon style="text-zinc-400 h-[30px]" />
       </Box>
+
     </Box>
   )
 }

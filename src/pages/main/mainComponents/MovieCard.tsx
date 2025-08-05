@@ -1,23 +1,23 @@
-import type { MovieCardInfo } from '../../../_interfaces/interfaces'
 import { imageBaseUrl } from '../../../_constants/constants'
 import { Link } from 'react-router'
 import { Box, Typography } from '@mui/material'
 import { useState } from 'react'
 import { colorStyle } from '../../../_constants/colorConstants'
+import HeartButton from '../../../components/HeartButton'
 
-const VoteText = ({ movieCardInfo }: { movieCardInfo: MovieCardInfo }) => {
+const VoteText = ({ movieCardInfo }: { movieCardInfo: any }) => {
   const voteAverage = Math.round(movieCardInfo["vote_average"] * 10) / 10
   const voteCount = `(${movieCardInfo["vote_count"]})`
 
   return (
     <Box className="flex gap-3">
-      <Typography sx={{ fontWeight: 500}}>{voteAverage}</Typography>
+      <Typography sx={{ fontWeight: 500 }}>{voteAverage}</Typography>
       <Typography sx={{ color: "oklch(0.8 0 0)" }}>{voteCount}</Typography>
     </Box>
   )
 }
 
-const MovieCard = ({ movieCardInfo, variant }: { movieCardInfo: MovieCardInfo, variant: "NORMAL" | "BIG" }) => {
+const MovieCard = ({ movieCardInfo, variant }: { movieCardInfo: any, variant: "NORMAL" | "BIG" }) => {
   const posterSrc = `${imageBaseUrl}${movieCardInfo.poster_path}`
   const [isMouseOver, setIsMouseOver] = useState(false)
 
@@ -31,6 +31,8 @@ const MovieCard = ({ movieCardInfo, variant }: { movieCardInfo: MovieCardInfo, v
       className={linkVariantStyle}
       onMouseEnter={() => setIsMouseOver(true)}
       onMouseLeave={() => setIsMouseOver(false)}>
+        
+      {isMouseOver && <HeartButton movieId={movieCardInfo.id} />}
 
       <img src={posterSrc} alt={`${movieCardInfo.title}__poster`} className={`transition ${isMouseOver && "scale-105"} duration-500`} />
 
@@ -42,7 +44,6 @@ const MovieCard = ({ movieCardInfo, variant }: { movieCardInfo: MovieCardInfo, v
         }}>{movieCardInfo.title}</Typography>
         <VoteText movieCardInfo={movieCardInfo} />
       </Box>
-
     </Link>
   )
 }

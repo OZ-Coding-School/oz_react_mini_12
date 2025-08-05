@@ -1,27 +1,12 @@
-# 할 것
+# 하고 있는 것
+4. 영화 카드에 프롭으로 isFavorte 넣기. 부모에서 인덱싱 해서 넘겨주기
 
-## 메인 페이지에서 보여줄 것
-1. 이번 주 인기작 20
-2. 
-
-
-# 희망사항
-이번주 인기작 20 -> popular 2 페이지
-새로 올라온 컨텐츠 -> https://developer.themoviedb.org/reference/movie-latest-id
-
-메인 페이지
-<!-- - 인기작 -> https://developer.themoviedb.org/reference/trending-movies -->
+# 무한 스크롤 엣지 케이스
+---- 우선 무시하자 ----
+1. 더 이상 없다면 page를 늘리지 말아야 함
+2. 더 이상 없다는 게 확인되고 나면 request를 날리지 말아야 함
 
 
-
-
-디테일 페이지
-- recommendations -> https://developer.themoviedb.org/reference/movie-recommendations
-- review -> https://developer.themoviedb.org/reference/movie-reviews
-
-출연진 / https://api.themoviedb.org/3/credit/{credit_id}
-감독 / (위와 동일)
-개봉일 / 디테일
-런타임 / 디테일
-등급
-최대화질
+# 기타
+한 번 수정되기 시작하면 isEdited = true로 해서 다시 지워도 에러 메시지가 뜨게 한다
+(ex) 필수 항목입니다

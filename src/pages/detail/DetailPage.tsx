@@ -1,12 +1,13 @@
-import { imageBaseUrl } from '../../_constants/constants'
 import { Box, Button, Typography } from '@mui/material'
-import { useSelectedMovieGet } from "../../_hooks/hooks"
-import { useParams } from "react-router"
-import useMovieStore from "../../_store/store"
 import { useEffect } from 'react'
-import YoutubeBox from './detailComponents/YoutubeBox'
-import MovieCardGrid from '../main/mainComponents/MovieCardGrid'
+import { useParams } from "react-router"
+import { imageBaseUrl } from '../../_constants/constants'
+import { useSelectedMovieGet } from "../../_hooks/hooks"
+import useMovieStore from "../../_store/store"
 import { makeButtonSx } from '../../_utils/utils'
+import HeartButton from '../../components/HeartButton'
+import MovieCardGrid from '../main/mainComponents/MovieCardGrid'
+import YoutubeBox from './detailComponents/YoutubeBox'
 
 const GenreChip = ({ id, name }: { id: number, name: string }) => {
   const isDark = useMovieStore((state) => state.isDark)
@@ -20,31 +21,38 @@ const DetailPage = () => {
   const movieId = Number(params.movieId)
   const selectedMovie = useMovieStore((state) => state.selectedMovie)
   const setSelectedMovie = useMovieStore((state) => state.setSelectedMovie)
+
   useSelectedMovieGet(movieId)
 
-  useEffect(
-    () => {
-      return () => setSelectedMovie(null)
-    },
-    []
-  )
+  useEffect(() => {
+    return () => setSelectedMovie(null)
+  }, [])
+  const user = useMovieStore((state) => state.user)
 
   if (!selectedMovie) { return null }
 
-  const posterUrl = `${imageBaseUrl}${selectedMovie.poster_path}`
-  const youtubeKey = selectedMovie.videos.results[0].key
+  const videoInfo = selectedMovie.videos ? selectedMovie.videos.results[0] : null
+  const backdropPath = selectedMovie.backdrop_path
+  const backdropSrc = `${imageBaseUrl}${backdropPath}`
+
   const genreArray = selectedMovie["genres"]
-  const recommendationArray = selectedMovie.recommendations.results
+  const recommendationArray = selectedMovie.recommendations ? selectedMovie.recommendations.results : []
 
   const voteAverage = Math.round(selectedMovie["vote_average"] * 10) / 10
   const voteInfo = `⭐️ ${voteAverage}(${selectedMovie["vote_count"]})`
+
   return (
-    <Box className="flex flex-col md:grid grid-cols-3 gap-12 flex-1 h-full overflow-scroll px-3">
+    <Box sx={{ scrollbarColor: "oklch(0.5 0 0) transparent" }} className="flex flex-col md:grid grid-cols-3 gap-12 flex-1 h-full overflow-y-scroll px-3">
 
       <Box className="col-span-2 flex flex-col gap-6">
-        <YoutubeBox youtubeKey={youtubeKey} />
+        {videoInfo && <YoutubeBox youtubeKey={videoInfo.key} />}
+        {!videoInfo && <img src={backdropSrc} alt="backdrop" />}
 
-        <p className="text-5xl font-semibold">{selectedMovie["title"]}</p>
+        <div className="flex gap-3">
+          <p className="text-5xl font-semibold">{selectedMovie["title"]}</p>
+          {user && <HeartButton movieId={movieId} isRelative={true} />}
+        </div>
+
         <Box>
           <p className="text-2xl mb-2">{selectedMovie.tagline}</p>
           <p>{voteInfo}</p>
@@ -59,7 +67,7 @@ const DetailPage = () => {
 
       <Box className='flex flex-col gap-6 max-w-[750px] w-full'>
         <Box>
-          <MovieCardGrid movieCardInfoArray={recommendationArray} isLoading={false} />
+          <MovieCardGrid movieArray={recommendationArray} />
         </Box>
       </Box>
 

@@ -1,5 +1,6 @@
+import { keyUrlDictArray } from "../_constants/constants"
+import type { MovieDict } from "../_store/store"
 import { axiosMovie } from "./axiosSettings"
-import { keyUrlDictArray, makeGenreUrl, genreDictArray } from "../_constants/constants"
 
 const getJsonPromise = async (url: string, targetArray: string[]) => {
     const response = await axiosMovie.get(url)
@@ -13,26 +14,11 @@ const getJsonPromise = async (url: string, targetArray: string[]) => {
 
 const makePagedUrl = (page: number, query: string) => {
     if (!query) {
-        return `https://api.themoviedb.org/3/discover/movie?include_adult=false&certification.lte=19&certification_country=KR&language=ko&sort_by=popularity&page=${page}.desc`
+        return `https://api.themoviedb.org/3/discover/movie?include_adult=false&certification.lte=19&certification_country=KR&language=ko&page=${page}&sort_by=popularity.desc`
     }
 
     const trimmedQuery = query.trim()
-    return `https://api.themoviedb.org/3/search/movie?query=${trimmedQuery}&include_adult=false&language=ko&page=1`
-}
-
-export const getMovieALot = async (pageLength: number, setMovieArray: (movieArray: any) => void, query: string) => {
-    const dummyArray = [...Array(pageLength).keys()]
-    const promiseArray = dummyArray.reduce((acc: Promise<any>[], index) => {
-        const url = makePagedUrl(index + 1, query)
-        const json = getJsonPromise(url, ["results"])
-
-        return [...acc, json]
-    }, [])
-
-    const resolvedArray = await Promise.all(promiseArray)
-    const flattenedArray = resolvedArray.flat()
-
-    setMovieArray(flattenedArray)
+    return `https://api.themoviedb.org/3/search/movie?query=${trimmedQuery}&include_adult=false&language=ko&page=${page}`
 }
 
 export const getDetail = async (movieId: number, setSelectedMovie: (selectedMovie: any) => void) => {
@@ -47,4 +33,34 @@ export const getVariousMovieArray = async () => {
         acc[cur.key] = await axiosMovie.get(cur.url)
     }, {})
     console.log("---- result:", result)
+}
+
+/** 무한 스크롤 중에는 is loading이 없어야 한다 */
+export const getMovieDict = async (
+    page: number, query: string, movieDict: MovieDict, addToMovieDict: (movieDict: MovieDict) => void, increasePage: () => void,
+    setIsLoading?: (isLoading: boolean) => void,
+
+) => {
+    if (setIsLoading) { setIsLoading(true) }
+
+    const url = makePagedUrl(page, query)
+    const json = await getJsonPromise(url, ["results"])
+    const newMovieDict = json.reduce((acc: MovieDict, cur: any) => {
+        if (movieDict[cur.id]) {
+            return acc
+        }
+
+        const pageIncludedDict = { ...cur, page }
+        acc[cur.id] = pageIncludedDict
+        return acc
+    }, {})
+    addToMovieDict(newMovieDict)
+    increasePage()
+    if (setIsLoading) { setIsLoading(false) }
+}
+
+export const getPopularMovieArray = async (setPopularMovieArray: (popluarMovieArray: any[]) => void) => {
+    const url = "https://api.themoviedb.org/3/trending/movie/day?language=ko"
+    const json = await getJsonPromise(url, ["results"])
+    setPopularMovieArray(json)
 }

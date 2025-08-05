@@ -1,10 +1,16 @@
 import FaceIcon from '@mui/icons-material/Face';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { Box, Menu, MenuItem } from '@mui/material';
+import { Box, CircularProgress, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { signOut } from './_database/supabase';
 import useMovieStore from './_store/store';
+
+const getImageSrc = (user: any) => {
+  const metadata = user.user_metadata
+  const pictureSrc = metadata.picture ? metadata.picture : metadata.avatar_url
+  return pictureSrc
+}
 
 const ProfileBox = () => {
   const navigate = useNavigate()
@@ -13,12 +19,16 @@ const ProfileBox = () => {
 
   const user = useMovieStore((state) => state.user)
   const setUser = useMovieStore((state) => state.setUser)
-  const googleCredentialResponse = useMovieStore((state) => state.googleCredentialResponse)
-  const setGoogleCredentialResponse = useMovieStore((state) => state.setGoogleCredentialResponse)
+  const providerCredentialResponse = useMovieStore((state) => state.providerCredentialResponse)
 
-  const isLoggedIn = user || googleCredentialResponse
+  const isWaitingLoginResponse = providerCredentialResponse && !user
+  const isLoggedIn = user
+
+  const resetFavoriteDetailDict = useMovieStore((state) => state.resetFavoriteDetailDict)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    console.log("----user:", user)
+
     if (!isLoggedIn) {
       navigate("/login")
       return
@@ -31,12 +41,16 @@ const ProfileBox = () => {
   const handleLogoutClick = () => {
     setAnchorEl(null)
     user && signOut(setUser)
-    googleCredentialResponse && setGoogleCredentialResponse(null)
+    resetFavoriteDetailDict()
+  }
+  const handleMyPageClick = () => {
+    setAnchorEl(null)
+    navigate("/mypage")
   }
 
 
 
-  const profileBaseStyle = "transition w-[54px] h-[54px] rounded-full flex justify-center items-center"
+  const profileBaseStyle = "transition w-[54px] h-[54px] rounded-full flex justify-center items-center overflow-hidden"
   const profileLoggedInStyle = isLoggedIn ? "bg-blue-400" : "border-3 border-blue-400 opacity-60 hover:opacity-100"
   const profileStyle = `${profileBaseStyle} ${profileLoggedInStyle}`
 
@@ -44,7 +58,8 @@ const ProfileBox = () => {
   return (
     <>
       <Box className={profileStyle} onClick={handleClick}>
-        {isLoggedIn && <FaceIcon className="text-white" fontSize='large' />}
+        {isLoggedIn && <img src={getImageSrc(user)} />}
+        {isWaitingLoginResponse && <CircularProgress />}
       </Box>
 
       {isLoggedIn &&
@@ -53,10 +68,17 @@ const ProfileBox = () => {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}>
+
+          <MenuItem onClick={handleMyPageClick} className="gap-3">
+            <FaceIcon className="text-white" fontSize='large' />
+            <p className="text-xl">My Page</p>
+          </MenuItem>
+
           <MenuItem onClick={handleLogoutClick} className="gap-3">
             <LogoutRoundedIcon fontSize="large" />
             <p className="text-xl">Logout</p>
           </MenuItem>
+
         </Menu>
       }
     </>
