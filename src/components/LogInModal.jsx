@@ -7,11 +7,11 @@ import { Theme } from "../GlobalStyle";
 export default function LoginModal() {
   const navigate = useNavigate();
   const location = useLocation();
-    const pathName = location.pathname;
-    
-    const backgroundLocation = location.state?.backgroundLocation || {
-      pathname: "/",
-    };
+  const pathName = location.pathname;
+
+  const backgroundLocation = location.state?.backgroundLocation || {
+    pathname: "/",
+  };
 
   const closeModal = () => {
     navigate(backgroundLocation);
@@ -20,9 +20,19 @@ export default function LoginModal() {
   const handlePath = (path) => {
     switch (path) {
       case "/login":
-        return <LogIn backgroundLocation={backgroundLocation} />;
+        return (
+          <LogIn
+            backgroundLocation={backgroundLocation}
+            closeModal={closeModal}
+          />
+        );
       case "/signup":
-        return <SignUp backgroundLocation={backgroundLocation} />;
+        return (
+          <SignUp
+            backgroundLocation={backgroundLocation}
+            closeModal={closeModal}
+          />
+        );
       default:
         return <p>잘못된 경로입니다.</p>;
     }

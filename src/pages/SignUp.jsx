@@ -3,7 +3,7 @@ import FormInput, { isAllValid, LogInContainer, useValidation } from "../util/va
 import { signUp } from "../util/auth";
 import { useLoginStore } from "../store/logIn_store";
 
-export default function SignUp() {
+export default function SignUp({ closeModal }) {
   const { login } = useLoginStore();
   const formRef = useRef();
   const [formData, setFormData] = useState({
@@ -26,8 +26,7 @@ export default function SignUp() {
     {
       name: "password",
       type: "password",
-      placeholder:
-        "비밀번호",
+      placeholder: "비밀번호",
     },
     {
       name: "confirmPassword",
@@ -36,23 +35,23 @@ export default function SignUp() {
     },
   ];
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const form = new FormData(formRef.current);
-  const formObj = Object.fromEntries(form);
+    const form = new FormData(formRef.current);
+    const formObj = Object.fromEntries(form);
 
-  const valid = isAllValid(validErr);
+    const valid = isAllValid(validErr);
 
-  try {
-    const response = await signUp(formObj, valid);
-    console.log("회원가입 성공!", response);
-    login(response.user);
-    
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+    try {
+      const response = await signUp(formObj, valid);
+      console.log("회원가입 성공!", response);
+      login(response.user);
+      closeModal();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

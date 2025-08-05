@@ -55,8 +55,9 @@ const Layout = () => {
     navigate("/signup", { state: { backgroundLocation: location } });
   };
 
-  const openUserInfo = () => {
-    navigate("/userInfo", { state: { backgroundLocation: location } });
+  const openMyPageModal = () => {
+    navigate("/myPageModal", { state: { backgroundLocation: location } });
+    console.log("location:", location);
   };
   // 즉시 검색 함수
   const immediateSearch = useCallback(
@@ -124,7 +125,7 @@ const Layout = () => {
                 <img
                   src={user?.user_metadata?.avatarUrl ?? "/profileImgs/01.jpg"}
                   alt="profile_img"
-                  onClick={openUserInfo}
+                  onClick={openMyPageModal}
                 />
               </>
             ) : (
@@ -221,6 +222,7 @@ const LayoutStyled = styled.div`
           border-radius: 50%;
           margin-right: 1rem;
           object-fit: cover;
+          cursor: pointer;
         }
         div {
           cursor: pointer;

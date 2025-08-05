@@ -5,11 +5,16 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchGenres, fetchMovieById } from "../api/tmbi";
 import { useMovieStore } from "../store/movie_store.js";
 import { Theme } from "../GlobalStyle.js";
+import { like, loadLikesToStore, unLike } from "../util/auth.js";
+import { useLoginStore } from "../store/logIn_store.js";
 
 export default function Detail() {
   const { getMovieById, genreMap } = useMovieStore();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [isLike, setIsLike] = useState(false);
+  const { likes } = useLoginStore();
+
   // console.log(movieId);
 
   const navigate = useNavigate();
@@ -29,6 +34,8 @@ export default function Detail() {
     const loadMovie = async () => {
       setIsLoad(false);
       await fetchGenres();
+      await loadLikesToStore();
+
       let movieData = getMovieById(Number(movieId));
       // console.log("movieData:", movieData);
       // console.log("genres:", movieData?.genres);
@@ -46,9 +53,19 @@ export default function Detail() {
         setMovie(movieData);
       }
       setIsLoad(true);
+      
     };
     loadMovie();
   }, [movieId]);
+
+  useEffect(() => {
+    if (!likes || !movieId) return;
+
+    likes?.find((el) => el.movie_id === Number(movieId))
+      ? setIsLike(true)
+      : setIsLike(false);
+  }, [likes, movieId]);
+
 
   if (!isLoad || !movie) {
     return (
@@ -64,7 +81,7 @@ export default function Detail() {
     );
   }
 
-  console.log(movie);
+  // console.log(movie);
 
   const {
     title,
@@ -75,8 +92,12 @@ export default function Detail() {
     release_date,
   } = movie;
 
-  console.log(movie.genre_ids);
-  console.log(genreMap);
+  // console.log(movie.genre_ids);
+  // console.log(genreMap);
+
+  const handleLike = async () => {
+    isLike ? (unLike(movie), setIsLike(false)) : (like(movie), setIsLike(true));
+  };
 
   return (
     <DetailStyled>
@@ -99,6 +120,9 @@ export default function Detail() {
           <div className="release_date">{release_date}</div>
         </div>
         <div className="overview">{overview}</div>
+      </div>
+      <div className="i_love_this" title="찜하기" onClick={() => handleLike()}>
+        {isLike ? "★" : "☆"}
       </div>
     </DetailStyled>
   );
@@ -171,6 +195,7 @@ const DetailStyled = styled.div`
   background-color: ${Theme("background")};
   padding: 1rem 3rem;
   gap: 2rem;
+  position: relative;
 
   img {
     height: 100%;
@@ -221,6 +246,24 @@ const DetailStyled = styled.div`
     .overview {
       overflow-y: auto;
       word-break: keep-all;
+    }
+  }
+
+  .i_love_this {
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0.4rem;
+    top: 1rem;
+    right: 1rem;
+    font-size: 4rem;
+    cursor: pointer;
+    &:hover {
+      background-color: ${Theme("cardBGHover")};
     }
   }
 `;
