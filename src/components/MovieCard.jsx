@@ -1,14 +1,15 @@
+import { forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export function MovieCard({ movie }) {
+export const MovieCard = forwardRef(({ movie }, ref) =>{
   const { title, vote_average, poster_path, id } = movie;
   const navigate = useNavigate();
 
   const formattedRate = vote_average.toFixed(2);
 
   return (
-    <Card onClick={() => navigate(`/detail/${id}`)}>
+    <Card ref={ref} onClick={() => navigate(`/detail/${id}`)}>
       <img
         src={`https://image.tmdb.org/t/p/w500${poster_path}`}
         alt={title + " poster"}
@@ -17,7 +18,7 @@ export function MovieCard({ movie }) {
       <div className="vote_average">평점 : ⭐{formattedRate}</div>
     </Card>
   );
-}
+});
 
 export const Card = styled.div`
   display: flex;

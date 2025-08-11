@@ -55,7 +55,7 @@ const isValidPassword = (password) => {
   // \D	non-digit
   // \W	non-word
   // \S	non-space
-  const passwordReg =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
+  const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
 
   return password.length >= 8 && passwordReg.test(password);
   // 8자 이상, 숫자 하나 이상, 대/소문자 하나 이상
@@ -85,7 +85,6 @@ export function useValidation(initialState) {
 export function isAllValid(validErr) {
   return Object.values(validErr).every((status) => status === "valid");
 }
-
 
 export default function FormInput({
   type,
@@ -117,7 +116,8 @@ export const getValidationMessage = (name, formData, validation) => {
   const validationHints = {
     email: "올바른 이메일 주소를 입력해주세요.",
     userName: "특수문자를 포함하지 않는 이름을 입력해주세요.",
-    password: "비밀번호는 8자 이상, 숫자 하나 이상, 대/소문자 하나 이상이어야 합니다",
+    password:
+      "비밀번호는 8자 이상, 숫자 하나 이상, 대/소문자 하나 이상이어야 합니다",
     confirmPassword: "비밀번호가 일치하지 않습니다.",
   };
 
@@ -178,6 +178,31 @@ export const LogInContainer = styled.div`
       border: none;
     }
 
+    .OAuth_2 {
+      display: flex;
+      padding: 1rem;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      div {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        gap:1rem;
+        padding: 1rem 2rem;
+        border: 1px solid ${Theme("text")};
+        border-radius: 0.5rem;
+        font-size: 1.2rem;
+        transition: all 0.15s ease;
+        cursor: pointer;
+        &:hover {
+          background-color: ${Theme("cardBGHover")};
+        }
+        img{
+          width:2rem;
+        }
+      }
+    }
     .openSignUp {
       text-align: center;
       font-size: 1.1rem;

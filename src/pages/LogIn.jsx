@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import FormInput, { isAllValid, LogInContainer, useValidation } from "../util/validation";
 import { useNavigate } from "react-router-dom";
 import { useLoginStore } from "../store/logIn_store";
-import { signIn } from "../util/auth";
+import { signIn, socialSignIn } from "../util/auth";
 
-export default function LogIn({ backgroundLocation }) {
+export default function LogIn({ backgroundLocation, closeModal }) {
   const navigate = useNavigate();
   const formRef = useRef();
   const [formData, setFormData] = useState({
@@ -38,28 +38,31 @@ export default function LogIn({ backgroundLocation }) {
     debouncedValidate(name, updatedFormData);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const form = new FormData(formRef.current);
-  const formObj = Object.fromEntries(form);
+    const form = new FormData(formRef.current);
+    const formObj = Object.fromEntries(form);
 
-  const valid = isAllValid(validErr);
+    const valid = isAllValid(validErr);
 
-  try {
-    const response = await signIn(formObj, valid);
-    console.log("로그인 성공!", response);
-    login(response.user);
-
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
+    try {
+      const response = await signIn(formObj, valid);
+      console.log("로그인 성공!", response);
+      login(response.user);
+      closeModal();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const openSignUp = () => {
     navigate("/signup", { state: { backgroundLocation } });
   };
+
+const handleOauth = (provider) => {
+  socialSignIn(provider);
+};
 
   return (
     <LogInContainer>
@@ -77,6 +80,16 @@ const handleSubmit = async (e) => {
           ></FormInput>
         ))}
         <button type="submit">로그인</button>
+        <div className="OAuth_2">
+          <div className="kakao" onClick={() => handleOauth("kakao")}>
+            <img src="/login_icons/kakao.png" alt="카카오 아이콘" />
+            kakao
+          </div>
+          <div className="google" onClick={() => handleOauth("google")}>
+            <img src="/login_icons/google.png" alt="구글 아이콘" />
+            google
+          </div>
+        </div>
         <div className="openSignUp">
           오즈 무비가 처음이신가요? <a onClick={openSignUp}>회원가입</a>
         </div>

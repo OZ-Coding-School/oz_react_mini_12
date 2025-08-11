@@ -9,6 +9,10 @@ import { GlobalSyle } from "./GlobalStyle.js";
 import Skeleton from "./components/skeletonUI.jsx";
 import LoginModal from "./components/LogInModal.jsx";
 import AuthCallback from "./pages/AuthCallback.jsx";
+import MyPageModal from "./components/MyPageModal.jsx";
+import MyPage from "./pages/MyPage.jsx";
+import { useLoginStore } from "./store/logIn_store.js";
+import { supabase } from "./util/supabaseClient.js";
 // import SignUp from "./pages/SignUp.jsx";
 
 const Main = lazy(() =>
@@ -27,6 +31,18 @@ function App() {
   const isDark = useThemeStore((state) => state.isDark);
   const getTheme = useThemeStore((state) => state.getTheme);
   const theme = getTheme();
+
+  const { login } = useLoginStore();
+  useEffect(() => {
+    const restoreSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data?.session) {
+        login(data.session.user); 
+      }
+      if (error) throw error;
+    };
+    restoreSession();
+  }, []);
 
   // 초기화 로직 : Promise.allSettled를 통해 오류가 났을때를 대비함
   useEffect(() => {
@@ -76,16 +92,14 @@ function App() {
             <Route path="/detail/:movieId" element={<Detail />}></Route>
             <Route path="/search/:query" element={<Search />}></Route>
             <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/userInfo" element={<UserInfoModal />} />
-            {/* <Route path="/login" element={<LogIn />}></Route> */}
-            {/* <Route path="/signup" element={<SignUp />}></Route> */}
-            {/* <Route path="/favorite" element={<Favorite></Favorite>}></Route> */}
+            <Route path="/mypage" element={<MyPage />} />
           </Route>
         </Routes>
         {state && (
           <Routes>
             <Route path="/login" element={<LoginModal />} />
             <Route path="/signup" element={<LoginModal />} />
+            <Route path="/myPageModal" element={<MyPageModal />} />
           </Routes>
         )}
       </Suspense>
