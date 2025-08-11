@@ -57,11 +57,12 @@ export const useMovieStore = create((set, get) => ({
 
   fetchMoreMovies: async () => {
     const currentPage = get().page;
-    const nextPage = currentPage + 1;
+
     try {
-      const res = await fetchPopularMovies(nextPage);
+      const res = await fetchPopularMovies(currentPage + 1);
       set((state) => ({
         movies: [...state.movies, ...res],
+        page: currentPage + 1,
       }));
     } catch (e) {
       set({ err: e });
