@@ -11,6 +11,7 @@ export const useMovieStore = create((set, get) => ({
   loading: false,
   err: null,
   genreMap: {},
+  page: 1,
 
   fetchInitialGenres: async () => {
     try {
@@ -21,33 +22,49 @@ export const useMovieStore = create((set, get) => ({
     }
   },
 
-  fetchInitialMovies: async (pages = 5) => {
+  fetchInitialMovies: async () => {
     set({ loading: true, err: null });
 
     try {
-      let allMovies = [];
       const slideMovies = await fetchTodayPopularMovies();
+      // let allMovies = [];
 
-      for (let page = 1; page <= pages; page++) {
-        const res = await fetchPopularMovies(page);
-        const tagged = res.map((movie) => ({
-          ...movie,
-          sourcePage: page,
-        }));
-        allMovies = allMovies.concat(tagged);
-      }
+      // for (let page = 1; page <= pages; page++) {
+      //   const res = await fetchPopularMovies(page);
+      //   const tagged = res.map((movie) => ({
+      //     ...movie,
+      //     sourcePage: page,
+      //   }));
+      //   allMovies = allMovies.concat(tagged);
+      // }
 
       // 확인용
       // console.log(allMovies);
       // console.log(slideMovies);
 
+      const res = await fetchPopularMovies();
+      // 일단 1페이지만 로드
+
       set({
-        movies: allMovies,
+        movies: res,
         slideMovies: slideMovies,
         loading: false,
       });
     } catch (e) {
       set({ err: e, loading: false });
+    }
+  },
+
+  fetchMoreMovies: async () => {
+    const currentPage = get().page;
+    const nextPage = currentPage + 1;
+    try {
+      const res = await fetchPopularMovies(nextPage);
+      set((state) => ({
+        movies: [...state.movies, ...res],
+      }));
+    } catch (e) {
+      set({ err: e });
     }
   },
 

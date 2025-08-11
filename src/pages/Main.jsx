@@ -9,13 +9,35 @@ import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
 import "../swiper.css";
 import { useMovieStore } from "../store/movie_store.js";
+import { useCallback, useState } from "react";
 
 export function Main() {
-  const { movies, slideMovies, loading } = useMovieStore();
+  const { movies, slideMovies, loading, fetchMoreMovies } = useMovieStore();
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const navigate = useNavigate();
 
   // console.log("movies:", movies);
   // console.log("slideMovies:", slideMovies);
+
+  const lastCardObserver = useCallback(
+    (node) => {
+      if (!node) return;
+
+      const observer = new IntersectionObserver(
+        async (entries) => {
+          if (entries[0].isIntersecting && !isFetchingMore) {
+            setIsFetchingMore(true);
+            await fetchMoreMovies();
+            setIsFetchingMore(false);
+          }
+        },
+        { threshold: 1.0 }
+      );
+
+      observer.observe(node);
+    },
+    [isFetchingMore, fetchMoreMovies]
+  );
 
   return (
     <MainStyled>
@@ -64,9 +86,16 @@ export function Main() {
                 <div className="skeleton-vote" />
               </MovieCardSkeleton>
             ))
-          : movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie}></MovieCard>
-            ))}
+          : movies.map((movie, idx) => {
+              const isLast = idx === movies.length - 1;
+              return (
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  ref={isLast ? lastCardObserver : null}
+                ></MovieCard>
+              );
+            })}
       </MovieGrid>
     </MainStyled>
   );
@@ -122,7 +151,7 @@ const MainStyled = styled.div`
   flex-direction: column;
   position: relative;
 
-  .swiper_description{
+  .swiper_description {
     font-size: 1.8rem;
     position: absolute;
     top: 0.6rem;
