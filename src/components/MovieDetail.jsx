@@ -1,9 +1,11 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { IoBookmark } from "react-icons/io5";
+import { FaEye } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
+import { RiMovieAiFill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SkeletonMovieDetail from "./SkeletonMovieDetail";
-import { FaYoutube } from "react-icons/fa";
 import {
   fetchMovieDetail,
   fetchMovieCredits,
@@ -90,26 +92,6 @@ const MovieHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-const MovieDetailsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  z-index: 3;
-  margin-top: 100px;
-  margin-bottom: 5px;
-  padding: 5px;
-  position: relative;
-  width: 100%;
-`;
-
-const MovieDetailsMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 5px;
-  margin-top: 30px;
-  text-align: left;
-  position: absolute;
-`;
-
 const PosterImage = styled.img`
   position: absolute;
   top: 0%;
@@ -189,6 +171,42 @@ const LikeDislikeButton = styled.button`
     background-color: "#275cd6";
     color: white;
   }
+`;
+
+const IconItemContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0;
+  width: 100%;
+`;
+
+// 각 네비게이션 아이템
+// .withConfig(): 특정 컴포넌트를 렌더링하고 동작시키는 방식을 설정(configure)할 수 있게 해주는 특별한 메서드
+// shouldForwardProp: styled-components가 생성한 컴포넌트에 전달되는 모든 prop들을 검사하는 함수
+const IconItem = styled.div`
+  display: flex;
+  width: 780px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-decoration: none;
+  color: ${(props) => (props.$active ? "#275cd6" : "#98a4b7")};
+  font-size: 0.75rem;
+  font-weight: ${(props) => (props.$active ? "700" : "400")};
+  transition: color 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+`;
+
+// 아이콘 자체 스타일
+const IconBox = styled.div`
+  font-size: 1.5rem;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => (props.$active ? "#275cd6" : "#98a4b7")};
+  cursor: pointer;
 `;
 
 const OverviewSection = styled.div`
@@ -292,6 +310,7 @@ const NoTrailerMessage = styled.p`
   text-align: center;
   margin-top: 20px;
 `;
+/* ================================================================= */
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -299,11 +318,34 @@ const MovieDetail = () => {
   const [creditsData, setCreditsData] = useState(null);
   const [trailerKey, setTrailerKey] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [likeStatus, setLikeStatus] = useState(null);
 
   const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
   const POSTER_SIZE = "w500";
   const BACKDROP_SIZE = "w1280";
+
+  const [likeMovies, setLikeMovies] = useState(() => {
+    return JSON.parse(localStorage.getItem("likeMovies")) || []; // 수정된 부분: 로컬스토리지에서 불러오기
+  });
+  const [disLikeMovies, setDisLikeMovies] = useState(() => {
+    return JSON.parse(localStorage.getItem("dislikeMovies")) || []; // 수정된 부분: 로컬스토리지에서 불러오기
+  });
+
+  // 좋아요와 별로예요 상태값을 로컬스토리지에 저장
+  // const [likeMovies, setLikeMovies] = useState([]);
+  // const [disLikeMovies, setDisLikeMovies] = useState([]);
+  const [wishList, setWishList] = useState([]);
+  const [watchingList, setWatchingList] = useState([]);
+  const [watchedList, setWatchedList] = useState([]);
+  const [bestMovies, setBestMovies] = useState(
+    () => JSON.parse(localStorage.getItem("bestMovies")) || []
+  );
+  const [bestReady, setBestReady] = useState(false);
+
+  // 버튼 클릭 상태 관리
+  const [wishListActive, setWishListActive] = useState(false);
+  const [watchingActive, setWatchingActive] = useState(false);
+  const [watchedActive, setWatchedActive] = useState(false);
+  const [bestMoviesActive, setBestMoviesActive] = useState(false);
 
   useEffect(() => {
     const fetchAllMovieData = async () => {
@@ -325,6 +367,36 @@ const MovieDetail = () => {
         if (trailer) {
           setTrailerKey(trailer.key);
         }
+        // 로컬스토리지에서 상태를 불러온 후 movieData와 동기화
+        const savedWishList =
+          JSON.parse(localStorage.getItem("wishList")) || [];
+        const savedWatchingList =
+          JSON.parse(localStorage.getItem("watchingList")) || [];
+        const savedWatchedList =
+          JSON.parse(localStorage.getItem("watchedList")) || [];
+        const savedBestMovies =
+          JSON.parse(localStorage.getItem("bestMovies")) || [];
+
+        setWishList(savedWishList);
+        setWatchingList(savedWatchingList);
+        setWatchedList(savedWatchedList);
+        setBestMovies(savedBestMovies);
+        setBestReady(true);
+
+        setWishListActive(
+          savedWishList.some((movie) => movie.id === movieDetail.id)
+        );
+        setWatchingActive(
+          savedWatchingList.some((movie) => movie.id === movieDetail.id)
+        );
+        setWatchedActive(
+          savedWatchedList.some((movie) => movie.id === movieDetail.id)
+        );
+        setBestMoviesActive(
+          (JSON.parse(localStorage.getItem("bestMovies")) || []).some(
+            (movie) => movie.id === movieDetail.id
+          )
+        );
       } catch (error) {
         console.error("영화 정보 가져오기 오류:", error);
       } finally {
@@ -334,25 +406,97 @@ const MovieDetail = () => {
     fetchAllMovieData();
   }, [id]);
 
-  if (loading || !movieData) return <SkeletonMovieDetail />;
+  useEffect(() => {
+    // movieData와 버튼 상태가 초기화된 후, 상태값을 로컬스토리지에 저장
+    localStorage.setItem("likeMovies", JSON.stringify(likeMovies));
+    localStorage.setItem("dislikeMovies", JSON.stringify(disLikeMovies));
+    // 다른 리스트들은 로컬스토리지에 저장하지 않음
+  }, [likeMovies, disLikeMovies]);
 
-  const backdropUrl = movieData.backdrop_path
+  useEffect(() => {
+    localStorage.setItem("wishList", JSON.stringify(wishList));
+    localStorage.setItem("watchingList", JSON.stringify(watchingList));
+    localStorage.setItem("watchedList", JSON.stringify(watchedList));
+    localStorage.setItem("bestMovies", JSON.stringify(bestMovies));
+  }, [wishList, watchingList, watchedList, bestMovies]);
+
+  const backdropUrl = movieData?.backdrop_path
     ? `${IMAGE_BASE_URL}${BACKDROP_SIZE}${movieData.backdrop_path}`
     : null;
-  const posterUrl = movieData.poster_path
+  const posterUrl = movieData?.poster_path
     ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movieData.poster_path}`
     : null;
   const director = creditsData?.crew.find(
     (member) => member.job === "Director"
   )?.name;
 
-  const handleLike = () => {
-    setLikeStatus((prev) => (prev === "좋아요" ? null : "좋아요"));
-  };
-  const handleDislike = () => {
-    setLikeStatus((prev) => (prev === "별로예요" ? null : "별로예요"));
+  // 로딩중일때 스켈레톤
+  if (loading || !movieData) return <SkeletonMovieDetail />;
+
+  // 공통 함수: 리스트에 추가/삭제 및 로컬스토리지 업데이트
+  const handleListActive = (list, setList, movieData) => {
+    const updatedList = list.some((movie) => movie.id === movieData.id)
+      ? list.filter((movie) => movie.id !== movieData.id) // 영화가 이미 리스트에 있으면 삭제
+      : [...list, movieData]; // 영화가 없으면 추가
+    setList(updatedList);
+    return updatedList;
   };
 
+  // 좋아요 클릭
+  const handleLike = () => {
+    setLikeMovies((prev) => {
+      const updatedMovies = prev.some((movie) => movie.id === movieData.id)
+        ? prev.filter((movie) => movie.id !== movieData.id) // 이미 좋아요 상태이면 취소
+        : [...prev, movieData]; // 좋아요에 추가
+
+      // 별로예요 상태를 취소
+      setDisLikeMovies((prevDislikeMovies) =>
+        prevDislikeMovies.filter((movie) => movie.id !== movieData.id)
+      );
+
+      // 로컬스토리지에 업데이트
+      localStorage.setItem("likeMovies", JSON.stringify(updatedMovies));
+      return updatedMovies;
+    });
+  };
+
+  const handleDislike = () => {
+    setDisLikeMovies((prev) => {
+      const updatedMovies = prev.some((movie) => movie.id === movieData.id)
+        ? prev.filter((movie) => movie.id !== movieData.id) // 이미 별로예요 상태이면 취소
+        : [...prev, movieData]; // 별로예요에 추가
+
+      // 좋아요 상태를 취소
+      setLikeMovies((prevLikeMovies) =>
+        prevLikeMovies.filter((movie) => movie.id !== movieData.id)
+      );
+
+      // 로컬스토리지에 업데이트
+      localStorage.setItem("dislikeMovies", JSON.stringify(updatedMovies));
+      return updatedMovies;
+    });
+  };
+
+  // 찜하기 / 보는중 / 봤어요 / 인생작품
+  const handleWishListClick = () => {
+    setWishListActive(!wishListActive);
+    setWishList(handleListActive(wishList, setWishList, movieData));
+  };
+
+  const handleWatchingClick = () => {
+    setWatchingActive(!watchingActive);
+    setWatchingList(handleListActive(watchingList, setWatchingList, movieData));
+  };
+
+  const handleWatchedClick = () => {
+    setWatchedActive(!watchedActive);
+    setWatchedList(handleListActive(watchedList, setWatchedList, movieData));
+  };
+
+  const handleBestMoviesClick = () => {
+    setBestMoviesActive(!bestMoviesActive);
+    setBestMovies(handleListActive(bestMovies, setBestMovies, movieData));
+  };
   return (
     <DetailContainer>
       {backdropUrl && <BackdropSection $backgroundImage={backdropUrl} />}
@@ -379,17 +523,47 @@ const MovieDetail = () => {
         <ButtonContainer>
           <LikeDislikeButton
             onClick={handleLike}
-            $active={likeStatus === "좋아요"}
+            $active={likeMovies.some((movie) => movie.id === movieData.id)}
           >
             💙 좋아요
           </LikeDislikeButton>
           <LikeDislikeButton
             onClick={handleDislike}
-            $active={likeStatus === "별로예요"}
+            $active={disLikeMovies.some((movie) => movie.id === movieData.id)}
           >
             💔 별로예요
           </LikeDislikeButton>
         </ButtonContainer>
+
+        <IconItemContainer>
+          <IconItem $active={wishListActive} onClick={handleWishListClick}>
+            <IconBox $active={wishListActive}>
+              <IoBookmark />
+            </IconBox>
+            찜하기
+          </IconItem>
+
+          <IconItem $active={watchingActive} onClick={handleWatchingClick}>
+            <IconBox $active={watchingActive}>
+              <FaEye />
+            </IconBox>
+            보는중
+          </IconItem>
+
+          <IconItem $active={watchedActive} onClick={handleWatchedClick}>
+            <IconBox $active={watchedActive}>
+              <FaCheck />
+            </IconBox>
+            봤어요
+          </IconItem>
+
+          <IconItem $active={bestMoviesActive} onClick={handleBestMoviesClick}>
+            <IconBox $active={bestMoviesActive}>
+              <RiMovieAiFill />
+            </IconBox>
+            인생영화
+          </IconItem>
+        </IconItemContainer>
 
         <OverviewSection>
           <SectionTitle>줄거리</SectionTitle>
@@ -408,11 +582,7 @@ const MovieDetail = () => {
               {creditsData.cast.slice(0, 10).map((cast) => (
                 <CastMember key={cast.id}>
                   <CastImage
-                    src={
-                      cast.profile_path
-                        ? `${IMAGE_BASE_URL}w185${cast.profile_path}`
-                        : "https://via.placeholder.com/100x100.png?text=No+Image"
-                    }
+                    src={`${IMAGE_BASE_URL}w185${cast.profile_path}`}
                     alt={cast.name}
                   />
                   <CastName>{cast.name}</CastName>
