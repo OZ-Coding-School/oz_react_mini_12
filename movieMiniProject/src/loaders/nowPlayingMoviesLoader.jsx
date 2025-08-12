@@ -10,7 +10,7 @@ export async function nowPlayingMoviesLoader() {
   };
 
   const res = await fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&page=1`,
+    `https://api.themoviedb.org/3/movie/now_playing?language=ko-KR`,
     options
   );
 
@@ -18,5 +18,5 @@ export async function nowPlayingMoviesLoader() {
     throw new Response(`서버 오류!`, { status: res.status });
   }
   const data = await res.json();
-  return data.results;
+  return data;
 }

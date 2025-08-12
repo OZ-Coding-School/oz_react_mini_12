@@ -18,5 +18,5 @@ export async function upcomingMoviesLoader() {
     throw new Response(`서버 오류!`, { status: res.status });
   }
   const data = await res.json();
-  return data.results;
+  return data;
 }

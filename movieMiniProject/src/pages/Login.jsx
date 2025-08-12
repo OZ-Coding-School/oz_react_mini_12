@@ -1,8 +1,9 @@
 import { NavLink, useNavigate } from "react-router";
 import { useState } from "react";
-import { supabase } from "../supabase";
 import { regExp } from "../constants/regularExpression";
 import { errorMessage } from "../constants/errorMessage";
+import { useLoginStore } from "../store/LoginStore";
+import { useModeStore } from "../store/ModeStore";
 import Input from "../components/Input";
 import googleImg from "../assets/google.png";
 import kakaoImg from "../assets/kakao.png";
@@ -12,45 +13,26 @@ const Login = () => {
   const [emailInput, setEmailInput] = useState(``);
   const [passwordInput, setPasswordInput] = useState(``);
   const navigate = useNavigate();
+  const {
+    isUser,
+    logInWithEmail,
+    logInWithGoogle,
+    logInWithKakao,
+    logInWithGithub,
+  } = useLoginStore();
+  const { isDark } = useModeStore();
 
-  async function logInWithEmail(e) {
-    e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: emailInput,
-      password: passwordInput,
-    });
-
-    if (error) {
-      console.error("로그인 실패:", error.message);
-      alert("로그인 실패: " + error.message);
-    } else {
-      console.log("로그인 성공:", data);
-      navigate("/");
-    }
-  }
-
-  async function logInWithGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-  }
-
-  async function logInWithKakao() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "kakao",
-    });
-  }
-
-  async function logInWithGithub() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-    });
-  }
+  // console.log(isUser);
+  // console.log(isDark);
 
   return (
     <>
       <form
-        onSubmit={logInWithEmail}
+        name="login"
+        onSubmit={(e) => {
+          logInWithEmail(e, emailInput, passwordInput);
+          isUser && navigate(`/`);
+        }}
         className="pt-[200px] flex flex-col justify-center items-center gap-10"
       >
         <h1 className="text-5xl">로그인</h1>
@@ -75,7 +57,9 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-[108px] bg-[#ffffff7a] rounded-3xl text-xl"
+            className={`w-[108px] rounded-3xl text-xl ${
+              isDark ? `bg-[#ffffff7a]` : `bg-[#0000003d]`
+            }`}
           >
             Login
           </button>
@@ -96,7 +80,7 @@ const Login = () => {
           <img
             src={githubImg}
             alt="github 로고"
-            className="size-12 invert"
+            className={`size-12 ${isDark ? `invert` : ``}`}
             onClick={logInWithGithub}
           />
         </div>

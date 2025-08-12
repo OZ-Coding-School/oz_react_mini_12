@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useModeStore } from "../store/ModeStore";
 
 const Input = ({
   type,
@@ -10,6 +11,7 @@ const Input = ({
   compareValue = null,
 }) => {
   const [isError, setIsError] = useState(false);
+  const { isDark } = useModeStore();
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -21,14 +23,16 @@ const Input = ({
   };
   return (
     <>
-      <label htmlFor="" className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1">
         <input
           type={type}
           placeholder={placeHolder}
           value={value}
           pattern={pattern}
           required
-          className="w-[300px] h-10 bg-[#ffffff7a] p-[0_25px] rounded-full"
+          className={`w-[300px] h-10 p-[0_25px] rounded-full ${
+            isDark ? `bg-[#ffffff7a]` : `bg-[#0000003d]`
+          }`}
           onChange={handleChange}
         />
         {isError && <p className="text-[#790000]">{errorMessage}</p>}
